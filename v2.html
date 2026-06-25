@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>练习 - 学生学习页面</title>
+<style>
+:root{--bg:#f0f2f5;--card:#fff;--txt:#1a1a2e;--t2:#6b7280;--pri:#4f46e5;--ok:#059669;--err:#dc2626;--warn:#d97706;--brd:#e5e7eb;--hover:#f3f4f6;--sh:0 2px 8px rgba(0,0,0,.06)}
+.dark{--bg:#111827;--card:#1f2937;--txt:#f9fafb;--t2:#9ca3af;--pri:#818cf8;--ok:#34d399;--err:#f87171;--warn:#fbbf24;--brd:#374151;--hover:#374151;--sh:0 2px 8px rgba(0,0,0,.3)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;padding:16px;-webkit-font-smoothing:antialiased;touch-action:manipulation}
+.container{max-width:740px;margin:0 auto;width:100%}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.topbar h1{font-size:20px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
+.meta{font-size:12px;color:var(--t2)}
+
+.mode-tabs{display:flex;gap:4px;background:var(--card);border-radius:10px;padding:4px;margin-bottom:10px;box-shadow:var(--sh);flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+.mode-tabs::-webkit-scrollbar{display:none}
+.mode-tab{flex:0 0 auto;padding:9px 12px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--t2);transition:all .15s;text-align:center;min-width:70px;touch-action:manipulation}
+.mode-tab.active{background:var(--pri);color:#fff}
+.mode-tab:hover:not(.active){background:var(--hover)}
+
+.subbar{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.subbar select,.subbar input,.subbar button{padding:8px 12px;border-radius:8px;font-size:13px;border:1px solid var(--brd);background:var(--card);color:var(--txt);cursor:pointer;-webkit-appearance:none;appearance:none}
+.subbar select{min-width:140px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
+.subbar input{flex:1;min-width:120px;cursor:text}
+.subbar button{font-weight:600;white-space:nowrap}
+.btn-sm{padding:8px 14px;font-size:13px;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:all .12s;touch-action:manipulation}
+.btn-sm:active{transform:scale(.96)}
+.btn-pri{background:var(--pri);color:#fff}
+.btn-out{background:transparent;color:var(--pri);border:1px solid var(--pri)}
+.btn-warn{background:var(--warn);color:#fff}
+.btn-err{background:var(--err);color:#fff}
+
+.timer{font-size:13px;font-weight:700;color:var(--pri);margin-left:auto;white-space:nowrap}
+.timer.urgent{color:var(--err);animation:blink .6s linear infinite}
+@keyframes blink{50%{opacity:.4}}
+
+.progress-wrap{margin-bottom:10px}
+.progress-bar{height:4px;background:var(--brd);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--pri);transition:width .3s;border-radius:2px}
+.progress-info{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-top:3px}
+
+.qgrid{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;max-height:120px;overflow-y:auto;padding:4px}
+.qgrid-item{width:32px;height:32px;border-radius:6px;border:1.5px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;cursor:pointer;background:var(--card);color:var(--txt);transition:all .12s;touch-action:manipulation}
+.qgrid-item.current{border-color:var(--pri);background:#eef2ff;color:var(--pri)}
+.dark .qgrid-item.current{background:#312e81}
+.qgrid-item.answered{background:#d1fae5;border-color:var(--ok);color:#065f46}
+.dark .qgrid-item.answered{background:#064e3b;color:#6ee7b7}
+.qgrid-item.wrong-mark{background:#fee2e2;border-color:var(--err);color:#991b1b}
+.dark .qgrid-item.wrong-mark{background:#7f1d1d;color:#fca5a5}
+.qgrid-item.fav-mark{box-shadow:0 0 0 2px #f59e0b}
+.qgrid-item:hover{transform:scale(1.1)}
+
+.card{background:var(--card);border-radius:14px;padding:20px 18px;margin-bottom:12px;box-shadow:var(--sh);min-height:180px;position:relative}
+.star-btn{position:absolute;top:12px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#d1d5db;transition:all .15s;z-index:2;width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.star-btn.active{color:#f59e0b;filter:drop-shadow(0 0 2px rgba(245,158,11,.5))}
+.star-btn:hover{transform:scale(1.2)}
+
+.q-head{display:flex;align-items:baseline;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.q-num{background:var(--pri);color:#fff;min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.q-type{font-size:11px;color:var(--pri);background:#eef2ff;padding:2px 7px;border-radius:4px;font-weight:600}
+.dark .q-type{background:#312e81;color:#a5b4fc}
+.no-ans-tag{font-size:10px;background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:4px;margin-left:4px;vertical-align:middle}
+.q-text{font-size:16px;line-height:1.6;font-weight:500}
+
+.options{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.opt{display:flex;align-items:flex-start;padding:14px 16px;border:2px solid var(--brd);border-radius:12px;cursor:pointer;transition:all .12s;font-size:16px;line-height:1.55;touch-action:manipulation;min-height:56px}
+.opt:hover:not(.done){border-color:var(--pri);background:var(--hover)}
+.opt:active:not(.done){transform:scale(.98)}
+.opt .o-label{font-weight:700;color:var(--t2);margin-right:10px;min-width:24px;flex-shrink:0;font-size:17px}
+.opt .o-check{width:22px;height:22px;border:2px solid var(--brd);border-radius:5px;margin-right:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;transition:all .12s}
+.opt.selected:not(.done){border-color:var(--pri);background:#eef2ff}
+.dark .opt.selected:not(.done){background:#312e81}
+.opt.selected .o-check{border-color:var(--pri);background:var(--pri);color:#fff}
+.opt.correct{border-color:var(--ok);background:#d1fae5}
+.dark .opt.correct{background:#064e3b}
+.opt.wrong{border-color:var(--err);background:#fee2e2}
+.dark .opt.wrong{background:#7f1d1d}
+.opt.done{cursor:default}
+
+.fill-row{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.fill-input{width:100%;padding:14px 16px;border:2px solid var(--brd);border-radius:10px;font-size:16px;background:var(--card);color:var(--txt);outline:none}
+.fill-input:focus{border-color:var(--pri)}
+
+.confirm-row{display:flex;gap:8px;margin:10px 0}
+.confirm-row button{padding:10px 20px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer}
+
+.result{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:14px;display:none;line-height:1.5}
+.result.show{display:block}
+.result.ok{background:#d1fae5;color:#065f46;border:1px solid #a7f3d0}
+.result.err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+.result.info{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe}
+
+.flashcard-flip{perspective:600px;min-height:200px;cursor:pointer}
+.flashcard-flip .inner{transition:transform .5s;transform-style:preserve-3d;position:relative}
+.flashcard-flip.flipped .inner{transform:rotateY(180deg)}
+.flash-front,.flash-back{backface-visibility:hidden;padding:20px;border-radius:12px;border:2px solid var(--brd);min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:17px;line-height:1.7}
+.flash-front{background:var(--card)}
+.flash-back{background:#d1fae5;color:#065f46;position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column;gap:8px}
+.dark .flash-back{background:#064e3b;color:#6ee7b7}
+
+.nav-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.nav-btn{padding:12px 24px;border:2px solid var(--brd);border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;background:var(--card);color:var(--txt);transition:all .15s;touch-action:manipulation;min-width:100px}
+.nav-btn:hover{border-color:var(--pri);color:var(--pri)}
+.nav-btn:active{transform:scale(.98)}
+.nav-btn:disabled{opacity:.35;cursor:not-allowed}
+.current-indicator{font-size:14px;font-weight:600;color:var(--pri);white-space:nowrap}
+
+.big-btn{display:block;width:100%;padding:16px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;margin:6px 0;touch-action:manipulation}
+.big-btn:active{transform:scale(.98)}
+.btn-submit{background:var(--pri);color:#fff}
+.btn-view{background:var(--warn);color:#fff}
+.btn-retry{background:var(--ok);color:#fff}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:14px;padding:22px;max-width:520px;width:94%;max-height:82vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.2)}
+.modal h3{font-size:17px;margin-bottom:10px}
+.modal-close{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:var(--t2)}
+.modal table{width:100%;border-collapse:collapse;font-size:13px}
+.modal td,.modal th{padding:7px 8px;text-align:left;border-bottom:1px solid var(--brd)}
+.modal th{color:var(--t2);font-weight:600}
+
+@media(max-width:500px){
+  body{padding:8px}
+  .topbar h1{font-size:17px;max-width:160px}
+  .meta{font-size:11px}
+  .mode-tab{font-size:12px;padding:7px 10px;min-width:65px}
+  .subbar select,.subbar input,.subbar button{padding:7px 10px;font-size:12px}
+  .subbar select{min-width:120px}
+  .btn-sm{padding:7px 12px;font-size:12px}
+  .qgrid-item{width:30px;height:30px;font-size:12px}
+  .card{padding:16px 14px;min-height:160px}
+  .star-btn{font-size:22px;width:32px;height:32px}
+  .q-head{gap:6px;margin-bottom:10px}
+  .q-num{min-width:24px;height:24px;font-size:11px}
+  .q-type{font-size:10px;padding:2px 6px}
+  .q-text{font-size:16px;line-height:1.6}
+  .options{gap:7px;margin:8px 0}
+  .opt{padding:12px 14px;font-size:15px;min-height:52px}
+  .opt .o-label{font-size:16px;margin-right:8px;min-width:22px}
+  .opt .o-check{width:20px;height:20px;margin-right:8px}
+  .fill-input{padding:12px 14px;font-size:15px}
+  .nav-btn{padding:10px 18px;font-size:14px;min-width:85px}
+  .current-indicator{font-size:13px}
+  .big-btn{padding:14px;font-size:15px}
+  .result{padding:10px 12px;font-size:13px}
+}
+
+@media(max-width:380px){
+  body{padding:6px}
+  .topbar h1{font-size:16px;max-width:130px}
+  .mode-tab{font-size:11px;padding:6px 8px;min-width:58px}
+  .subbar select{min-width:100px}
+  .qgrid-item{width:28px;height:28px;font-size:11px}
+  .card{padding:14px 12px}
+  .q-text{font-size:15px}
+  .opt{padding:10px 12px;font-size:14px}
+  .nav-btn{padding:8px 14px;font-size:13px;min-width:75px}
+  .big-btn{padding:12px;font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="topbar">
+  <h1>📝 学生学习页面</h1>
+  <span class="meta">125题 · 0有答案</span>
+</div>
+
+<div class="mode-tabs">
+  <button class="mode-tab active" data-mode="practice">📖 练习</button>
+  <button class="mode-tab" data-mode="exam">📝 考试</button>
+  <button class="mode-tab" data-mode="flashcard">🃏 闪卡</button>
+  <button class="mode-tab" id="btnWrongBook">📕 错题<span id="wrongCount"></span></button>
+  <button class="mode-tab" id="btnFavorites">⭐ 收藏<span id="favCount"></span></button>
+  <button class="mode-tab" id="btnScores">📊 成绩</button>
+</div>
+
+<div class="subbar">
+  <select id="sectionFilter"><option value="all">📂 全部章节</option></select>
+  <input type="text" id="searchInput" placeholder="🔍 搜索题目/选项...">
+  <button id="btnRandom" class="btn-sm btn-out">🔀 随机</button>
+  <button id="btnToggleDark" class="btn-sm btn-out">🌓</button>
+  <button id="btnReset" class="btn-sm btn-out">🔄</button>
+  <button id="btnClearWrong" class="btn-sm btn-err" style="display:none">🗑错题</button>
+  <span class="timer" id="examTimer" style="display:none"></span>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+  <div class="progress-info"><span id="progLabel">第 1 / 125 题</span><span id="ansCount">已答: 0</span></div>
+</div>
+
+<div class="qgrid" id="qGrid"></div>
+<div class="card" id="qCard"></div>
+<div id="actionArea" style="margin-bottom:10px"></div>
+
+<div class="nav-row">
+  <button class="nav-btn" id="btnPrev">← 上一题</button>
+  <span class="current-indicator" id="curIndicator"></span>
+  <button class="nav-btn" id="btnNext">下一题 →</button>
+</div>
+</div>
+
+<div class="modal-overlay" id="wrongBookModal"><div class="modal"><button class="modal-close" id="closeWrongBook">&times;</button><h3>📕 错题本</h3><div id="wrongBookContent"></div></div></div>
+<div class="modal-overlay" id="scoresModal"><div class="modal"><button class="modal-close" id="closeScores">&times;</button><h3>📊 考试成绩记录</h3><div id="scoresContent"></div></div></div>
+<div class="modal-overlay" id="favModal"><div class="modal"><button class="modal-close" id="closeFav">&times;</button><h3>⭐ 收藏夹</h3><div id="favContent"></div></div></div>
+
+<script>
+var QUESTIONS = [{"id":1,"type":"单选题","text":"( )是人生观的核心,在人生实践中具有重要的作用。","options":[{"label":"A","text":"人生道路"},{"label":"B","text":"人生目的"},{"label":"C","text":"人生态度"},{"label":"D","text":"人生价值"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":2,"type":"单选题","text":"中国特色社会主义进入新时代, 意味着近代以来久经磨难的中华民族迎来了 从站起来、富起来到强起来的宏伟飞跃,迎来了( )的光明前景。","options":[{"label":"A","text":"实现中华民族伟大复兴"},{"label":"B","text":"实现共产主义"},{"label":"C","text":"全面深化改革"},{"label":"D","text":"全面依法治国"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":3,"type":"单选题","text":"马克思指出:人的本质不是单个人所固有的抽象物,在其现实性上,它是一切( )的总和。","options":[{"label":"A","text":"生产关系"},{"label":"B","text":"社会关系"},{"label":"C","text":"政治关系"},{"label":"D","text":"经济关系"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":4,"type":"单选题","text":"( )是把享乐作为人生目的,主张人生就在于满足感官的需求与快乐的思想观念。","options":[{"label":"A","text":"极端个人主义"},{"label":"B","text":"享乐主义"},{"label":"C","text":"拜金主义"},{"label":"D","text":"物质主义"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":5,"type":"单选题","text":"( )是人们的思想观念、政治立场、价值取向、道德情操和行为习惯等方面品质和才能的综合表达,反映着个人的思想境界和道德风貌。","options":[{"label":"A","text":"思想道德素质"},{"label":"B","text":"法治素质"},{"label":"C","text":"思想政治素质"},{"label":"D","text":"道德素质"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":6,"type":"单选题","text":"马克思说:“人只有为同时代人的完美、为他们的幸福而工作， 自己才能达到完美。如果一个人只为自己劳动 ，他也 许能够成为著名的学者、伟大的哲人、卓越的诗人 ，然而他永远不能成为完美的、真正伟大的人物。”这表明( )。","options":[{"label":"A","text":"人生价值是自我价值和社会价值的统一"},{"label":"B","text":"人生社会价值可以代替自我价值"},{"label":"C","text":"个人价值的实现取决于他人的认可"},{"label":"D","text":"实现自我价值是创造社会价值的原因"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":7,"type":"单选题","text":"全国劳动模范徐虎说过:“你不奉献,我不奉献,谁来奉献?你也索取,我也索取,向谁索取?〞这句话的意思是,社会需要每个人的奉献,只有有奉献才能有索取。这种观点认为,人生价值的本质在于( )。","options":[{"label":"A","text":"个人的社会存在"},{"label":"B","text":"社会对个人的崇敬和得志"},{"label":"C","text":"个人对社会的责任和付出"},{"label":"D","text":"个人需要的最大得志"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":8,"type":"单选题","text":"人生态度是对( )这一问题的认识和回答。","options":[{"label":"A","text":"人为什么活着"},{"label":"B","text":"人应当如何活着"},{"label":"C","text":"怎样成为真正的人"},{"label":"D","text":"什么样的人生才有意义"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":9,"type":"单选题","text":"青年的人生目标会有不同,职业选择也有差异,但只有把自己的小我融入祖国的大我、人民的大我之中,( )才能更好地实现人生价值、升华人生境界。","options":[{"label":"A","text":"与国家和民族共奋进、同发展"},{"label":"B","text":"砥砺奋斗、锤炼品格,释放火热青春"},{"label":"C","text":"与历史同向,与祖国同行、与人民同在"},{"label":"D","text":"与历史同步伐,与时代共命运"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":10,"type":"单选题","text":"人生价值评价的根本尺度,是看一个人的人生活动( ),是否通过实践促进了历史的进步。","options":[{"label":"A","text":"是否符合社会发展的客观规律"},{"label":"B","text":"是否促进个人的进展"},{"label":"C","text":"是否促进生产关系的改善"},{"label":"D","text":"是否促进生产力的进展"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":11,"type":"单选题","text":"关于正确幸福观的理解,错误的是( )。","options":[{"label":"A","text":"精神生活的充实是幸福更重要的方面。"},{"label":"B","text":"个人的幸福要依靠自己的奋斗,与他人无关。"},{"label":"C","text":"幸福是一个总体性的范畴,意味着人总体上生活得美好。"},{"label":"D","text":"幸福的实现需要确定的物质条件。"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":12,"type":"单选题","text":"“人的本质不是单个人所固有的抽象物,在其现实性上,它是一切社会关系的总和。”这句话说明","options":[{"label":"A","text":"自然属性和社会属性都不是人的本质属性"},{"label":"B","text":"自然属性和社会属性都是人的本质属性"},{"label":"C","text":"自然属性是人的本质属性"},{"label":"D","text":"社会属性是人的本质属性"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":13,"type":"单选题","text":"人生目的是人在人生实践中关于自身行为的根本指向和人生追求,它所认识和回答的根本问题是( )","options":[{"label":"A","text":"人如何对待生活"},{"label":"B","text":"人为什么活着"},{"label":"C","text":"怎样选择人生道路"},{"label":"D","text":"怎样对待人生境遇"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":14,"type":"单选题","text":"关于人生观与世界观的关系,以下说法错误的是( )。","options":[{"label":"A","text":"有什么样的世界观,就有什么样的人生观。"},{"label":"B","text":"正确的人生观是正确世界观的基础。"},{"label":"C","text":"人生观对世界观的巩固、发展和变化起着重要的作用。"},{"label":"D","text":"人生观是世界观在对待人生问题上的具体体现。"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":15,"type":"单选题","text":"人生态度与人生目的、人生价值的关系( )。","options":[{"label":"A","text":"人生态度与人生目的、人生价值无关"},{"label":"B","text":"人生态度抉择人生价值"},{"label":"C","text":"人生态度抉择人生目的"},{"label":"D","text":"人生态度既受人生目的、人生价值的抉择,又影响人生目的、人生价值的实现"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":16,"type":"多选题","text":"中国梦让生活在这个时代的大学生与祖国人民一起共同享有( )。","options":[{"label":"A","text":"梦想成真的机会"},{"label":"B","text":"人生出彩的机会"},{"label":"C","text":"发家致富的机会"},{"label":"D","text":"同祖国和时代一起成长与进步的机会"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":17,"type":"多选题","text":"青年大学生怎样才能做到“有担当”?( )。","options":[{"label":"A","text":"要有天下兴亡、匹夫有责的担当精神,讲求奉献,实干进取。"},{"label":"B","text":"应坚持实践第一、知行合一,求真务实、有为善为,勇于面对实际生活中的各种挫折考验,勤奋刻苦、磨砺意志、脚踏实地。"},{"label":"C","text":"自觉树立国家意识、民族意识、责任意识,把个人前途命运与国家、民族的前途命运紧紧地联系在一起。"},{"label":"D","text":"应始终保持昂扬向上的精神状态,富有求新求变的朝气锐气,敢于站在变革前沿,引领潮流之先,以新的实践创造更大成就。"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":18,"type":"多选题","text":"法律素质是人们学法、遵法、守法、用法的素养和能力。其基本要素包括( )。","options":[{"label":"A","text":"树立必需的法律观念"},{"label":"B","text":"具备基本的政治素养"},{"label":"C","text":"拥有必要的用法能力"},{"label":"D","text":"掌握必备的法律知识"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":19,"type":"多选题","text":"人生的自我价值和社会价值既相互区别 ，又密切联系 ，共同构成了人生价值的矛盾统一体。下列有关人生的自我价 值和社会价值的说法中 ，正确的有( )。","options":[{"label":"A","text":"社会价值的创造过程与自我价值的实现过程是统一的"},{"label":"B","text":"人生的社会价值是实现人生的自我价值的基础"},{"label":"C","text":"实现自我价值是因 ，创造社会价值是果 ，不实现自我价值 ，就无从创造社会价值"},{"label":"D","text":"一个人社会价值的大小取决于其自我价值实现的程度"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":20,"type":"多选题","text":"以下关于思想道德和法律的关系表述正确的有( )","options":[{"label":"A","text":"思想道德能够促进人们自觉尊法学法守法用法,维护法律权威。"},{"label":"B","text":"法律为思想道德供给制度保障"},{"label":"C","text":"思想道德为法律供给思想指引和价值根基"},{"label":"D","text":"思想道德和法律都是调理人们思想行为、协调人际关系、维护社会秩序的重要手段。"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":21,"type":"多选题","text":"比较客观、公正、准确地评价社会成员人生价值的大小 ，除了要掌握科学的标准外 ，还需要掌握恰当的评价方法， 坚持( )。","options":[{"label":"A","text":"完善自身与贡献社会相统一"},{"label":"B","text":"主观与客观相统一"},{"label":"C","text":"物质贡献与精神贡献相统一"},{"label":"D","text":"能力有大小与贡献须尽力相统一"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":22,"type":"多选题","text":"一个人如果成就出彩人生需要做到( )。","options":[{"label":"A","text":"与祖国同行"},{"label":"B","text":"拥有很多金钱"},{"label":"C","text":"与人民同在"},{"label":"D","text":"与历史同向"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":23,"type":"多选题","text":"下列关于社会价值正确的说法是( )","options":[{"label":"A","text":"对社会贡献得越多,其人生价值就越大"},{"label":"B","text":"社会价值是作为客体的人满足作为主体的人的关系"},{"label":"C","text":"社会价值主要通过劳动、创造和贡献表现出来"},{"label":"D","text":"社会价值是社会和他人对于个体的意义"},{"label":"E","text":"社会价值是个体的人生对于社会和他人的意义"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":24,"type":"多选题","text":"在社会主义社会中 ，个人利益与社会利益的统一关系主要体现在( )。","options":[{"label":"A","text":"社会利益体现了所有作为社会成员的个人的全部利益"},{"label":"B","text":"社会利益既是个人利益得以实现的前提和基础 ，又是个人利益得以实现的保障"},{"label":"C","text":"社会利益体现了作为社会成员的个人的根本利益和长远利益"},{"label":"D","text":"事实上 ，任何社会的个人利益与社会利益在根本上都是一致的"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":25,"type":"多选题","text":"人生观的主要内容包括( )","options":[{"label":"A","text":"人生态度"},{"label":"B","text":"人生问题"},{"label":"C","text":"人生目的"},{"label":"D","text":"人生价值"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题一章节测试","sectionPath":"章节测试","blankCount":0},{"id":26,"type":"单选题","text":"中华传统美德是中华优秀文化的重要组成部分 ，其内容博大精深、源远流长。从《诗经》中的“夙夜在公”到《尚书》中的“以公灭私” ，从西汉贾谊《治安策》中的“国而忘家 ，公而忘私”到宋代范仲淹《岳阳楼记》中的“先天下之忧而 忧 ，后天下之乐而乐” ，再到清代林则徐的“苟利国家生死以 ，岂因祸福避趋之”，贯穿其中的传统美德是( )。","options":[{"label":"A","text":"强调知行合一 ，注重躬行实践"},{"label":"B","text":"推崇“仁爱”原则 ，注重以和为贵"},{"label":"C","text":"重视整体利益 ，强调责任奉献"},{"label":"D","text":"提倡人伦价值 ，重视道德义务"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":27,"type":"单选题","text":"理想作为一种精神现象 ，是人类社会实践的产物。理想源于现实 ，又超越现实 ，在现实中有多种类型。从层次上划 分 ，理想有( )。","options":[{"label":"A","text":"个人理想和社会理想"},{"label":"B","text":"道德理想和政治理想"},{"label":"C","text":"生活理想和职业理想"},{"label":"D","text":"崇高理想和一般理想"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":28,"type":"单选题","text":"信念是认知、情感和意志的有机统一体 ，是人们在一定的认识基础上确立的对某种思想或事物坚定不移并身体力行 的心理态度和精神状态。信念是人们追求理想目标的强大动力 ，决定事业的成败。信念有不同的层次和类型 ，其中( ) 。","options":[{"label":"A","text":"低层次的信念代表了一个人的基本信仰"},{"label":"B","text":"高层次的信念决定低层次的信念"},{"label":"C","text":"相同社会环境中生活的人们的信念始终一致"},{"label":"D","text":"各种信念没有科学与非科学之分"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":29,"type":"单选题","text":"“哲学家们只是用不同的方式解释世界 ，而问题在于改变世界”。这鲜明地表明了马克思主义的基本特征是( ) 。","options":[{"label":"A","text":"以认识世界为己任"},{"label":"B","text":"具有持久的生命力"},{"label":"C","text":"科学性"},{"label":"D","text":"重视实践、以改造世界为己任"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":30,"type":"单选题","text":"习近平总书记在2013年“五四”青年节同各界优秀青年代表座谈时对青年人寄予了殷切希望:“青年一代有理想、有担 当 ，国家就有前途 ，民族就有希望 ，实现我们的发展目标就有源源不断的强大力量。”与我国各族人民一样 ，现阶段青年 一代应当树立的共同理想是( )。","options":[{"label":"A","text":"全中国实现全面脱贫"},{"label":"B","text":"践行社会主义荣辱观"},{"label":"C","text":"坚持和发展中国特色社会主义、实现中华民族伟大复兴"},{"label":"D","text":"弘扬以爱国主义为核心的民族精神和以改革创新为核心的时代精神"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":31,"type":"单选题","text":"青年时期牢固树立远大理想 ，人生道路就会越走越宽广 ，无论遇到怎样的艰难险阻 ，都能义无反顾、勇往直前。实 现理想的根本途径是( )。","options":[{"label":"A","text":"正确认识和对待实现理想过程中的顺境与逆境"},{"label":"B","text":"坚定的信念"},{"label":"C","text":"正确认识理想与现实的关系"},{"label":"D","text":"勇于实践、艰苦奋斗"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":32,"type":"单选题","text":"中国有句古话:“千里之行 ，始于足下” ，这句话对我们在人生哲理方面的启发是( )。","options":[{"label":"A","text":"立志当高远"},{"label":"B","text":"立志做大事"},{"label":"C","text":"立志须躬行"},{"label":"D","text":"立志须果断"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":33,"type":"单选题","text":"下列选项中 ，体现了理想和现实关系的名言是( )。","options":[{"label":"A","text":"“立志要如山 ，行道要如水。不如山 ，不能坚定;不如水 ，不能曲达”"},{"label":"B","text":"“理想是美好的 ，但没有意志 ，理想不过是瞬间即逝的彩虹”"},{"label":"C","text":"“只有知道了通往今天的路 ，我们才能清楚而有智地规划未来”"},{"label":"D","text":"“非淡泊无以明志 ，非宁静无以致远”"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":34,"type":"单选题","text":"人们在一定的认识基础上确立的、对某种思想或事物坚信不疑并身体力行的心理态度和精神状态是( )","options":[{"label":"A","text":"信念"},{"label":"B","text":"理想"},{"label":"C","text":"情感"},{"label":"D","text":"意志"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":35,"type":"单选题","text":"信念是( )","options":[{"label":"A","text":"思想、情感和意志的有机统一体"},{"label":"B","text":"思想、精神和意志的有机统一体"},{"label":"C","text":"观念、认识和意志的有机统一体"},{"label":"D","text":"认识、情感和意志的有机统一体"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":36,"type":"单选题","text":"( )是人的精神世界的核心，是人精神上的“钙”。","options":[{"label":"A","text":"理想信念"},{"label":"B","text":"中国传统文化"},{"label":"C","text":"中华民族优秀传统美德"},{"label":"D","text":"崇尚自由"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":37,"type":"单选题","text":"理想因其远大而为理想。理想在现实中产生，但它不是对现状的简单描绘，而是与奋斗目标相联系的未来的现实，是人们对未来美好生活的憧憬和期待。这说明( )。","options":[{"label":"A","text":"理想具有超越性"},{"label":"B","text":"理想具有实践性"},{"label":"C","text":"理想具有时代性"},{"label":"D","text":"理想具有阶级性"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":38,"type":"单选题","text":"马克思主义诞生于19世纪中叶，但并没有停留在19世纪。马克思一再告诫人们，马克思主义理论不是教条，而是行动指南，必须随着实践的变化而发展。这说明( )。","options":[{"label":"A","text":"马克思主义是科学的理论"},{"label":"B","text":"马克思主义是实践的理论"},{"label":"C","text":"马克思主义是人民的理论"},{"label":"D","text":"马克思主义是不断发展的开放的理论"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":39,"type":"单选题","text":"马克思主义第一次站在人民得立场探求人类自由解放得道路，以科学的理论为最终建立一个没有压迫、没有剥削、人人平等、人人自由的理想社会指明了方向。这说明( )。","options":[{"label":"A","text":"马克思主义是科学的理论"},{"label":"B","text":"马克思主义是实践的理论"},{"label":"C","text":"马克思主义是人民的理论"},{"label":"D","text":"马克思主义是不断发展的开放的理论"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":40,"type":"单选题","text":"中国特色社会主义最本质的特征是( )。","options":[{"label":"A","text":"中国共产党的领导"},{"label":"B","text":"坚持武装斗争"},{"label":"C","text":"坚持群众路线"},{"label":"D","text":"马克思主义指导思想"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":41,"type":"多选题","text":"信念同理想一样 ，也是人类特有的一种精神现象 ，是人们在一定的认识基础上确立的对某种思想或事物坚信不疑并 身体力行的精神状态。以下内容正确的有( )。","options":[{"label":"A","text":"信念是认知、情感和意志的有机统一体"},{"label":"B","text":"信念具有不同的层次和类型"},{"label":"C","text":"信念是最高层次的信仰"},{"label":"D","text":"信念是对理想的支持 ，是人们追求理想目标的强大动力"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":42,"type":"多选题","text":"俄国著名作家尼古拉 ·车尔尼雪夫斯基曾说:“人的活动如果没有理想的鼓舞 ，就会变得空虚而渺小。”这句名言说明 了理想的作用在于( )。","options":[{"label":"A","text":"能够指引人生的奋斗目标"},{"label":"B","text":"它是源于人们主观意志的一种判断"},{"label":"C","text":"能够提升人们的精神境界"},{"label":"D","text":"能够为人生提供前进的动力"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":43,"type":"多选题","text":"我们党和国家把马克思主义作为根本指导思想 ，原因在于( )。","options":[{"label":"A","text":"这是近代以来中国历史发展的必然结果"},{"label":"B","text":"马克思主义为中国革命和建设提供了现实的发展模式"},{"label":"C","text":"这是中国人民长期探索的历史选择"},{"label":"D","text":"这是由马克思主义严密的科学体系、鲜明的阶级立场和巨大的实践指导作用决定的"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":44,"type":"多选题","text":"在中国共产党的领导下 ，走中国特色社会主义道路 ，实现中华民族伟大复兴 ，是现阶段我国各族人民的共同理想。 这个共同理想( )。","options":[{"label":"A","text":"是人类最崇高的理想境界"},{"label":"B","text":"是迈向共产主义最高理想的一个阶段"},{"label":"C","text":"集中了我国工人、农民、知识分子和其他劳动者、建设者和爱国者的利益和愿望"},{"label":"D","text":"是保证全体人民在政治上、道义上和精神上团结一致 ，争取胜利的强大思想武器"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":45,"type":"多选题","text":"20世纪80年代末90年代初 ，东欧剧变、苏联解体 ，世界社会主义运动遭受重大挫折 ，西方某些别有用心的人预言 ， 社会主义将在20世纪末进入历史博物馆。然而 ，中国特色社会主义的成功实践 ，使社会主义运动展现了光明的前景。 由 此可见，( )。","options":[{"label":"A","text":"理想的实现是一个过程"},{"label":"B","text":"理想的实现是具有长期性、艰巨性和曲折性的"},{"label":"C","text":"坚定的信念是实现理想的重要条件"},{"label":"D","text":"任何一种社会政治理想都不会轻而易举地实现"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":46,"type":"多选题","text":"正确认识理想与现实的关系是实现理想的思想基础。关于理想与现实的关系 ，正确的表述有( )。","options":[{"label":"A","text":"理想与现实是对立统一的"},{"label":"B","text":"现实规定和制约着理想"},{"label":"C","text":"现实是理想的基础 ，理想是未来的现实"},{"label":"D","text":"理想一定可以转化为现实"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":47,"type":"多选题","text":"理想作为人们在实践中形成的、有可能实现的、对未来社会和自身发展的向往和追求 ，是( )。","options":[{"label":"A","text":"在现实生活中尚未实现的东西"},{"label":"B","text":"在现实生活中已经存在的东西"},{"label":"C","text":"对现实生活的超越"},{"label":"D","text":"人们的世界观、人生观和价值观在奋斗目标上的集中体现"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":48,"type":"多选题","text":"以下与“在艰苦中锻炼是成才的必要条件”意义相一致的格言警句有( )。","options":[{"label":"A","text":"“梅花香自苦寒来”"},{"label":"B","text":"“人才是第一资源 ，人人都可成才 ，人才就在群众中”"},{"label":"C","text":"“不经历风雨怎能见彩虹”"},{"label":"D","text":"“千淘万漉虽辛苦 ，吹尽狂沙始到金”"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":49,"type":"多选题","text":"习近平总书记2017年8月15日在给第三届中国“互联网+”大学生创业大赛“青年红色筑梦之旅”大学生的回信中指出: 祖国的青年一代有理想、有追求、有担当 ，实现中华民族伟大复兴就有源源不断的青春力量。希望你们扎根中国大地了 解国情民情 ，在创新创业中增长智慧才干 ，在艰苦奋斗中锤炼意志品质 ，在亿万人民为实现中国梦而进行的伟大奋斗中 实现人生价值 ，用青春书写无愧于时代、无愧于历史的华彩篇章。这告诉青年 ，应当正确认识和处理个人理想与社会理 想的关系。个人理想与社会理想的关系是( )。","options":[{"label":"A","text":"社会理想指引着个人理想"},{"label":"B","text":"个人理想从属于社会理想"},{"label":"C","text":"社会理想是对个人理想的凝练和升华"},{"label":"D","text":"社会理想的实现以个人理想的实现为前提和基础"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":50,"type":"多选题","text":"孙中山先生曾激励广大青年:“要立志做大事 ，不要立志做大官。”周恩来中学时期就立下了“为中华崛起而读书”的 志向;李四光、钱学森、邓稼先等老一辈知识分子 ，青年时期就立志用自己的聪明才智报效祖国。这些鲜活的实例给我 们的教益有( )。","options":[{"label":"A","text":"个人理想只有同国家的前途、民族的命运相结合 ，才是有意义的"},{"label":"B","text":"个人的向往和追求要同社会的需要和人民的利益相一致"},{"label":"C","text":"社会理想是个人理想的凝聚和升华 ，归根到底要靠全体社会成员的共同努力来实现"},{"label":"D","text":"要在实现社会理想的过程中实现个人理想"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"专题二章节测试","sectionPath":"章节测试","blankCount":0},{"id":51,"type":"单选题","text":"2013年10月21日,习近平在欧美同学会成立100周年庆祝大会上发表重要讲话,希望留学生坚守爱国主义精神,继承和发扬留学报国的光荣传统,做爱国主义的坚守者和传播者,自觉使个人成功的果实结在爱国主义这棵常青树上。检验一个人对祖国忠诚程度的试金石是( )","options":[{"label":"A","text":"对人民群众感情的深浅程度"},{"label":"B","text":"对祖国灿烂文化的热爱程度"},{"label":"C","text":"对祖国大好河山的依赖程度"},{"label":"D","text":"对整个民族利益的认同程度"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":52,"type":"单选题","text":"我们要大力弘扬的时代精神是当代中国人民精神风貌的集中写照,是激发社会创造活力的强大力量。其核心是( )","options":[{"label":"A","text":"国际主义"},{"label":"B","text":"集体主义"},{"label":"C","text":"改革创新"},{"label":"D","text":"开拓进取"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":53,"type":"单选题","text":"中华民族崇尚精神的优良传统,首先表现在对物质生活与精神生活相互关系的独到理解上。下列名言警句,体现这一点的是( )","options":[{"label":"A","text":"为天地立心,为生民立命,为往圣继绝学,为万世开太平"},{"label":"B","text":"自天子以至于庶人,一切皆以修身为本"},{"label":"C","text":"见贤思齐焉,见不贤而内自省也"},{"label":"D","text":"一箪食,一瓢饮,在陋巷,人不堪其忧,回也不改其乐"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":54,"type":"单选题","text":"在疫情面前,中华儿女同舟共济、众志成城,构筑起防控疫情的钢铁长城。体现了( )","options":[{"label":"A","text":"伟大创造精神"},{"label":"B","text":"伟大奋斗精神"},{"label":"C","text":"伟大团结精神"},{"label":"D","text":"伟大梦想精神"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":55,"type":"单选题","text":"( )作为兴国强国之魂,是实现中华民族伟大复兴不可或缺的精神支撑。","options":[{"label":"A","text":"中国精神"},{"label":"B","text":"中华优秀传统文化"},{"label":"C","text":"中国共产党"},{"label":"D","text":"中国人民"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":56,"type":"单选题","text":"( )体现了人们对自己祖国的深厚感情,揭示了个人对祖国的依存关系","options":[{"label":"A","text":"爱国主义"},{"label":"B","text":"民族精神"},{"label":"C","text":"时代精神"},{"label":"D","text":"改革创新"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":57,"type":"单选题","text":"( )是一个民族在长期共同生活和社会实践中形成的,为本民族大多数所认同的价值取向、思维方式、道德规范、精神气质的总和。","options":[{"label":"A","text":"爱国主义"},{"label":"B","text":"集体主义"},{"label":"C","text":"文化传统"},{"label":"D","text":"民族精神"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":58,"type":"单选题","text":"19世纪波兰音乐家肖邦离开祖国时曾带了一瓶祖国的泥土,在巴黎临终时,他嘱托亲人和朋友“我希望至少把我的心脏带回祖国去。”肖邦的做法体现了爱国主义中的( )","options":[{"label":"A","text":"爱祖国的大好河山"},{"label":"B","text":"爱自己的骨肉同胞"},{"label":"C","text":"爱祖国的灿烂文化"},{"label":"D","text":"爱自己的国家"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":59,"type":"单选题","text":"毛泽东高度赞扬鲁迅先生所提倡的“横眉冷对千夫指,俯首甘为孺子牛”精神,以鲁迅为榜样,做无产阶级和人民大众的“牛”,鞠躬尽瘁,死而后已,体现了( )","options":[{"label":"A","text":"爱祖国的大好河山"},{"label":"B","text":"爱自己的骨肉同胞"},{"label":"C","text":"爱祖国的灿烂文化"},{"label":"D","text":"爱自己的国家"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":60,"type":"单选题","text":"做新时期忠诚坚定的爱国者,除了需要培育强烈的爱国情感、保持民族自尊和自信,努力学习和工作、以实际行动和贡献履行爱国义务外,还需要( )","options":[{"label":"A","text":"拒绝接受其他国家的一切东西"},{"label":"B","text":"维护祖国统一和民族团结"},{"label":"C","text":"全面接受中国古代的传统文化和道德"},{"label":"D","text":"从经济基础到上层建筑的一切领域都与西方接轨"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":61,"type":"单选题","text":"( )是继新中国“两弹一星精神”、“抗洪精神”、“抗击非典精神”和“载人航天精神”之后,中华民族伟大精神的又一次升华,集中体现了以爱国主义为核心的民族精神和以自主创新为核心的时代精神。","options":[{"label":"A","text":"“高铁精神”"},{"label":"B","text":"“长征精神”"},{"label":"C","text":"“井冈山精神”"},{"label":"D","text":"“雷锋”精神"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":62,"type":"单选题","text":"社会主义核心价值观的坚实的现实基础,就是当今时代的中华民族所进行的人类历史上最为宏伟而独特的( )建设实践。","options":[{"label":"A","text":"宗教信仰"},{"label":"B","text":"中国特色社会主义"},{"label":"C","text":"精神文明"},{"label":"D","text":"民族记忆"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":63,"type":"单选题","text":"社会主义核心价值观的( ),体现在它是社会主义制度所坚持和追求的核心价值理念。","options":[{"label":"A","text":"人民性"},{"label":"B","text":"真实性"},{"label":"C","text":"广泛性"},{"label":"D","text":"先进性"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":64,"type":"单选题","text":"习近平指出:“这就像穿衣服扣扣子一样,如果第一粒扣子扣错了,剩余的扣子都会扣错。人生的扣子从一开始就要扣好。”这里面人生的扣子是指( )","options":[{"label":"A","text":"法治素养"},{"label":"B","text":"宗教信仰"},{"label":"C","text":"价值观"},{"label":"D","text":"民族记忆"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":65,"type":"单选题","text":"“韦编三绝、悬梁刺股的毅力,以凿壁借光、囊萤映雪的劲头”,说明践行社会主义核心价值观要( )","options":[{"label":"A","text":"勤学"},{"label":"B","text":"修德"},{"label":"C","text":"明辨"},{"label":"D","text":"笃实"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":66,"type":"多选题","text":"中国人民在长期奋斗中培育、继承、发展起来的伟大民族精神 ，为中国发展和人类文明进步提供了强大的精神动力。勤劳勇敢的中国人民在长期奋斗中培育、继承、发展起来的以爱国主义为核心的伟大民族精神的主要内容有( ) 。","options":[{"label":"A","text":"伟大创造精神"},{"label":"B","text":"伟大奋斗精神"},{"label":"C","text":"伟大团结精神"},{"label":"D","text":"伟大梦想精神"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":67,"type":"多选题","text":"祖国的大好河山,不只是自然风光,还是( )的基本载体。","options":[{"label":"A","text":"名胜古迹"},{"label":"B","text":"主权"},{"label":"C","text":"财富"},{"label":"D","text":"民族发展和进步"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":68,"type":"多选题","text":"爱国主义是人们对自己家园以及民族和文化的( )的统一。","options":[{"label":"A","text":"归属感"},{"label":"B","text":"认同感"},{"label":"C","text":"尊严感"},{"label":"D","text":"荣誉感"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":69,"type":"多选题","text":"社会主义核心价值观以其( )而居于人类社会的价值制高点,具有强大的道义力量。","options":[{"label":"A","text":"先进性"},{"label":"B","text":"人民性"},{"label":"C","text":"真实性"},{"label":"D","text":"潜在性"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":70,"type":"多选题","text":"实现中国梦必须弘扬中国精神,下列说法正确的是( )","options":[{"label":"A","text":"中国精神是凝聚民族复兴的磅礴伟力"},{"label":"B","text":"弘扬以爱国主义为核心的民族精神"},{"label":"C","text":"弘扬以改革创新为核心的时代精神"},{"label":"D","text":"伟大建党精神与中国精神是相互独立的"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":71,"type":"多选题","text":"民族精神是一个民族在长期共同生活和社会实践中形成的,为本民族大多数成员所认同的( )的总和。","options":[{"label":"A","text":"价值取向"},{"label":"B","text":"思维方式"},{"label":"C","text":"道德规范"},{"label":"D","text":"精神气质"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":72,"type":"多选题","text":"维护祖国统一,要( )","options":[{"label":"A","text":"在台湾问题上坚持一个中国原则"},{"label":"B","text":"保持香港和澳门的繁荣和稳定"},{"label":"C","text":"在台湾问题上坚持九二共识"},{"label":"D","text":"坚持对台湾的和平统一、一国两制"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":73,"type":"多选题","text":"培育和践行社会主义核心价值观有利于( )","options":[{"label":"A","text":"增进国际社会对中国的理解,扩大中华文化影响力"},{"label":"B","text":"增强社会主义意识形态的竞争力,掌握话语权,赢得主动权"},{"label":"C","text":"逐步打破西方的话语垄断、舆论垄断"},{"label":"D","text":"维护国家文化利益和意识形态安全,断提高我们国家的文化软实力"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":74,"type":"多选题","text":"坚定的核心价值观自信,是中国特色社会主义( )的价值内核。","options":[{"label":"A","text":"道路自信"},{"label":"B","text":"理论自信"},{"label":"C","text":"制度自信"},{"label":"D","text":"文化自信"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":75,"type":"多选题","text":"以下属于中华民族精神内涵的组成部分的有( )。","options":[{"label":"A","text":"抗洪精神"},{"label":"B","text":"长征精神"},{"label":"C","text":"北京奥运精神"},{"label":"D","text":"井冈山精神"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":76,"type":"单选题","text":"道德起源的第一个历史前提是( )。","options":[{"label":"A","text":"传统习俗"},{"label":"B","text":"人类的出现"},{"label":"C","text":"劳动"},{"label":"D","text":"人与人之间关系的形成"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":77,"type":"单选题","text":"下列说法正确的是( )。","options":[{"label":"A","text":"道德来自于神灵的启示和超自然力量的规定。"},{"label":"B","text":"道德起源于人的天性或自然本性。"},{"label":"C","text":"劳动创造了道德主体。"},{"label":"D","text":"道德起源于人的情感欲望或天然情感"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":78,"type":"单选题","text":"下列不属于社会公德主要内容的是( )。","options":[{"label":"A","text":"文明礼貌"},{"label":"B","text":"自立自强"},{"label":"C","text":"爱护公物"},{"label":"D","text":"遵纪守法"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":79,"type":"单选题","text":"下列关于家教的表述错误的是( )。","options":[{"label":"A","text":"庭是人生的第一个课堂,父母是孩子的第一任老师。"},{"label":"B","text":"注重家教,应该把美好的道德观念从小就传递给孩子,引导他们有做人的气节和骨气。"},{"label":"C","text":"家庭教育当然涉及品德教育,但其并不是家庭教育中最为重要的内容。"},{"label":"D","text":"家庭环境对下一代的影响很大,往往可以影响一个人的一生。"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":80,"type":"单选题","text":"( )是对中华传统美德的继承和发展,是社会主义道德的红色基因。","options":[{"label":"A","text":"爱国主义"},{"label":"B","text":"中国革命道德"},{"label":"C","text":"资本主义道德"},{"label":"D","text":"利己主义"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":81,"type":"单选题","text":"下列不属于传承中华传统美德原因的是( )。","options":[{"label":"A","text":"传统道德是对我国五千年道德实践经验的提炼总结。"},{"label":"B","text":"中华传统美德是我国宝贵的精神财富,只有精华,没有糟粕。"},{"label":"C","text":"中华传统美德是中华优秀文化的重要组成部分。"},{"label":"D","text":"中华传统美德是中华民族继续前进的不竭动力。"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":82,"type":"单选题","text":"列宁指出,共产主义道德的基础是( )。","options":[{"label":"A","text":"为巩固和完成共产主义事业而斗争。"},{"label":"B","text":"努力使物质财富最大化。"},{"label":"C","text":"彻底消灭资产阶级。"},{"label":"D","text":"全心全意为劳动者服务"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":83,"type":"单选题","text":"下列不属于道德特征的是( )。","options":[{"label":"A","text":"历史性"},{"label":"B","text":"民族性"},{"label":"C","text":"时代性"},{"label":"D","text":"相对性"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":84,"type":"单选题","text":"( )是立身兴国之本,对个人和社会都具有基础性意义。","options":[{"label":"A","text":"法律"},{"label":"B","text":"法治"},{"label":"C","text":"道德"},{"label":"D","text":"爱国"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":85,"type":"单选题","text":"以下哪种功能不是道德的最基本的功能( )。","options":[{"label":"A","text":"社会化功能"},{"label":"B","text":"认识功能"},{"label":"C","text":"规范功能"},{"label":"D","text":"调节功能"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":86,"type":"单选题","text":"社会主义道德的核心是( )。","options":[{"label":"A","text":"集体主义"},{"label":"B","text":"为人民服务"},{"label":"C","text":"共产主义"},{"label":"D","text":"爱国主义"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":87,"type":"单选题","text":"中国革命道德是指中国共产党人、人民军队、一切先进分子和人民群众在中国新民主主义革命和社会主义革命、建设与改革中所形成的优良道德。革命道德的灵魂是( )。","options":[{"label":"A","text":"坚持社会主义、共产主义理想和信念的不屈不挠的精神"},{"label":"B","text":"全心全意为人民服务"},{"label":"C","text":"始终把革命利益放在首位"},{"label":"D","text":"树立社会新风，建立新型人际关系"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":88,"type":"单选题","text":"集体主义的最高层次是( )。","options":[{"label":"A","text":"无私奉献、一心为公"},{"label":"B","text":"先公后私、先人后己"},{"label":"C","text":"顾全大局、遵纪守法"},{"label":"D","text":"热爱祖国、诚实劳动"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":89,"type":"单选题","text":"人类在长期社会生活实践中逐渐积累起来的、为社会交往和社会公共生活所应当遵守的最基本的行为准则，称为( )。","options":[{"label":"A","text":"社会公德"},{"label":"B","text":"职业道德"},{"label":"C","text":"家庭美德"},{"label":"D","text":"个人品德"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":90,"type":"单选题","text":"社会公德是在社会交往和公共生活中公民应该遵守的道德准则。在人与人之间关系的层面上，社会公德主要体现为( )。","options":[{"label":"A","text":"举止文明、尊重他人"},{"label":"B","text":"爱护公物、维护公共秩序"},{"label":"C","text":"热爱自然、保护环境"},{"label":"D","text":"维护世界和平"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":91,"type":"多选题","text":"道德主要依靠( )来发挥作用。","options":[{"label":"A","text":"社会舆论"},{"label":"B","text":"传统习俗"},{"label":"C","text":"内心信念"},{"label":"D","text":"自我意识"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":92,"type":"多选题","text":"社会主义道德是崭新类型的道德。与以往社会的道德形态相比，社会主义道德具有显著的先进性特征。社会主义道德的先进性主要体现在( )","options":[{"label":"A","text":"它是对人类优秀道德资源的批判继承与创新发展"},{"label":"B","text":"它克服了以往阶级社会道德片面性和局限性"},{"label":"C","text":"它是调节社会一切行为规范的准则"},{"label":"D","text":"它是社会主义经济基础的反映"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":93,"type":"多选题","text":"下列关于革命利益的说法正确的是( )。","options":[{"label":"A","text":"要始终把革命利益放在首位。"},{"label":"B","text":"要以革命利益为第一生命,以个人利益服从革命利益。"},{"label":"C","text":"为了国家和集体的利益,为了人民大众的利益,一切有革命觉悟的先进分子必要时都应当牺牲自己的利益。"},{"label":"D","text":"中国革命道德要求一切革命者和先进分子自觉地以个人利益服从革命利益,革命的集体和领导不必时刻关照每个革命成员的个人利益。"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":94,"type":"多选题","text":"下列属于公共秩序的是( )。","options":[{"label":"A","text":"工作秩序"},{"label":"B","text":"教学秩序"},{"label":"C","text":"交通秩序"},{"label":"D","text":"网络秩序"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":95,"type":"多选题","text":"个人品德是通过社会道德教育和个人自觉的道德修养所形成的稳定的心理状态和行为习惯。它是个体对某种道德要求 认同和践履的结果，集中体现了道德认知、道德情感、道德意志和道德行为的内在统一，这表明个人品德是( )。","options":[{"label":"A","text":"个人行为的统一整体及知、情、意、行的综合体现"},{"label":"B","text":"在实践活动中表现出来的行为的稳定倾向"},{"label":"C","text":"在实践活动中锤炼而成的一种特殊品性"},{"label":"D","text":"偶然的、短暂的道德行为现象"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":96,"type":"多选题","text":"马克思主义科学地揭示了道德的起源和本质，下列关于道德起源和本质的说法中，正确的有( )。","options":[{"label":"A","text":"道德是人先天具有的某种良知和善良意志"},{"label":"B","text":"道德产生于人类的历史发展和人们的社会实践中"},{"label":"C","text":"道德属于上层建筑的范畴，是一种特殊的社会意识形态"},{"label":"D","text":"道德是由社会经济基础决定的，并为社会经济基础服务"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":97,"type":"多选题","text":"在道德的功能系统中，主要的功能是( )。","options":[{"label":"A","text":"认识功能"},{"label":"B","text":"导向功能"},{"label":"C","text":"激励功能"},{"label":"D","text":"调节功能"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":98,"type":"多选题","text":"注重整体利益、国家利益和民族利益，强调对社会、民族、国家的责任意识和奉献精神;重视道德践履，强调修养的重要性，倡导道德主体要在完善自身中发挥自己的能动作用，是中华民族优良道德传统的重要内容，此外，中华民族优良道德传统的主要内容还有( )。","options":[{"label":"A","text":"推崇“仁爱”原则，追求人际和谐"},{"label":"B","text":"讲求谦敬礼让，强调克骄防矜"},{"label":"C","text":"倡导言行一致，强调恪守诚信"},{"label":"D","text":"追求精神境界，把道德理想的实现看作是一种高层次的需要"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":99,"type":"多选题","text":"以下属于中华民族优良道德传统中倡导言行一致、强调恪守诚信的有( )。","options":[{"label":"A","text":"“人而无信，不知其可也”"},{"label":"B","text":"“察色修身”"},{"label":"C","text":"“与朋友交，言而有信”"},{"label":"D","text":"“信近于义，言可复也”"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":100,"type":"多选题","text":"社会主义道德要以集体主义为原则。集体主义强调( )。","options":[{"label":"A","text":"国家利益、社会整体利益和个人利益的辩证统一"},{"label":"B","text":"国家利益、社会整体利益高于个人利益"},{"label":"C","text":"无条件牺牲个人利益保全国家利益、社会整体利益"},{"label":"D","text":"重视和保障个人的正当利益"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":101,"type":"单选题","text":"法律作为上层建筑的重要组成部分，不是凭空产生的，也不是永恒存在的，是由一定的社会物质生活条件所决定的。决定法律本质、内容和发展方向的根本因素是( )。","options":[{"label":"A","text":"地理环境"},{"label":"B","text":"物质资料的生产方式"},{"label":"C","text":"人口素质"},{"label":"D","text":"统治阶级的意志"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":102,"type":"单选题","text":"对“法是统治阶级意志的体现”的理解，正确的是( )。","options":[{"label":"A","text":"法是最高统治者的意志"},{"label":"B","text":"统治阶级的意志都是法律"},{"label":"C","text":"法是统治阶级意志的简单相加"},{"label":"D","text":"法是被奉为国家意志的统治阶级意志"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":103,"type":"单选题","text":"下列关于法的本质和特征的说法中，正确的是( )。","options":[{"label":"A","text":"法是由社会道德保证实施的社会规范"},{"label":"B","text":"法是体现国家领袖个人意志的社会规范"},{"label":"C","text":"法是受社会物质生活条件决定的社会规范"},{"label":"D","text":"法是由历史传统决定全部内容的社会规范"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":104,"type":"单选题","text":"“法律不但由国家制定或认可，而且由国家保证实施”，这句话说明了法律具有( )。","options":[{"label":"A","text":"国家强制性"},{"label":"B","text":"阶级性"},{"label":"C","text":"反映统治阶级意志的特质"},{"label":"D","text":"上层建筑的特点"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":105,"type":"单选题","text":"我国社会主义法律的形成始于哪一时期( )","options":[{"label":"A","text":"新民主主义革命时期"},{"label":"B","text":"旧民主主义革命时期"},{"label":"C","text":"社会主义初级阶段"},{"label":"D","text":"中华人民共和国成立以后"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":106,"type":"单选题","text":"我国社会主义法律体现了党的主张和( )的统一","options":[{"label":"A","text":"公民意志"},{"label":"B","text":"人民意志"},{"label":"C","text":"公共意志"},{"label":"D","text":"统治阶级意志"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":107,"type":"单选题","text":"法律区别于道德规范、宗教规范、风俗习惯等其他社会规范首要在于( )。","options":[{"label":"A","text":"法律是统治阶级意志的体现"},{"label":"B","text":"法律是由国家创制和实施的行为规范"},{"label":"C","text":"法律由社会物质生活条件决定"},{"label":"D","text":"法律是历史发展规律和自然规律的反映"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":108,"type":"单选题","text":"我国现行宪法是哪一年颁布的( )","options":[{"label":"A","text":"1954年"},{"label":"B","text":"1975年"},{"label":"C","text":"1978年"},{"label":"D","text":"1982年"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":109,"type":"单选题","text":"我国宪法第2条第1款规定“中华人民共和国的一切权力属于人民”,该条款确立哪项宪法原则( )","options":[{"label":"A","text":"人民主权原则"},{"label":"B","text":"基本人权原则"},{"label":"C","text":"社会主义法治原则"},{"label":"D","text":"民主集中制原则"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":110,"type":"单选题","text":"我国宪法规定“中华人民共和国公民不分民族、种族、性别、职业、家庭、出身、宗教信仰、教育程度、财产状况、居住期限等,都平等地享受公民权利.履行公民义务”,该条文体现了( )","options":[{"label":"A","text":"人民主权原则"},{"label":"B","text":"基本人权原则"},{"label":"C","text":"法律面前人人平等"},{"label":"D","text":"社会主义法治原则"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":111,"type":"单选题","text":"根据《中华人民共和国宪法》规定,公民的某些权利和义务是结合在一起的。下列选项中,既是公民权利又是公民义务的是( )","options":[{"label":"A","text":"劳动"},{"label":"B","text":"依法纳税"},{"label":"C","text":"依法服兵役"},{"label":"D","text":"遵守宪法和法律"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":112,"type":"单选题","text":"2018年3月11日通过的《中华人民共和国宪法修正案》关于宪法第三条第三款中人民代表大会产生的国家机关增加的内容是( )。","options":[{"label":"A","text":"行政机关"},{"label":"B","text":"监察机关"},{"label":"C","text":"审判机关"},{"label":"D","text":"检察机关"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":113,"type":"单选题","text":"全面依法治国的总目标是( )","options":[{"label":"A","text":"建设社会主义法制国家"},{"label":"B","text":"建设社会主义法治国家"},{"label":"C","text":"建设中国特色社会主义法治体系，建设社会主义法治国家"},{"label":"D","text":"建设中国特色社会主义法律体系"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":114,"type":"单选题","text":"习近平总书记提出的“以人民为中心”的重要思想,在法治建设中体现为哪项原则( )","options":[{"label":"A","text":"坚持人民主体地位"},{"label":"B","text":"坚持党的领导"},{"label":"C","text":"坚持法律面前人人平等原则"},{"label":"D","text":"坚持社会主义法治原则"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":115,"type":"单选题","text":"习近平法治思想的理论意义说法错误的是( )","options":[{"label":"A","text":"对马克思主义法治理论作出的是非原创性历史性贡献。"},{"label":"B","text":"是习近平新时代中国特色社会主义思想的重要组成部分"},{"label":"C","text":"是马克思主义法治理论同中国实际相结合的最新成果"},{"label":"D","text":"是中国特色社会主义法治理论的创新发展"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":116,"type":"多选题","text":"国家创制法律主要包括哪两种形式( )","options":[{"label":"A","text":"制定"},{"label":"B","text":"修改"},{"label":"C","text":"废止"},{"label":"D","text":"认可"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":117,"type":"多选题","text":"公民的人身权利包括( )。","options":[{"label":"A","text":"生命健康权"},{"label":"B","text":"人身自由权和人格尊严权"},{"label":"C","text":"言论自由权"},{"label":"D","text":"住宅安全权和通信自由权"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":118,"type":"多选题","text":"法治素养是指人们通过( )、依法维护权利与依法履行义务的素质、修养和能力,对于保证人们尊崇法治.遵守法律具有重要的意义。","options":[{"label":"A","text":"学习法律知识"},{"label":"B","text":"理解法律本质"},{"label":"C","text":"运用法治思维"},{"label":"D","text":"树立远大理想"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":119,"type":"多选题","text":"违反一夫一妻制原则的行为有( )","options":[{"label":"A","text":"有配偶者与他人同居"},{"label":"B","text":"事实上的重婚"},{"label":"C","text":"法律上的重婚"},{"label":"D","text":"虐待遗弃家庭成员的"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":120,"type":"多选题","text":"石某因要债,将债务人黄某关在自己家里。以下分析正确的是( )","options":[{"label":"A","text":"石某侵犯了黄某人身自由权"},{"label":"B","text":"石某有可能犯非法拘禁罪"},{"label":"C","text":"石某可能收到治安管理处罚"},{"label":"D","text":"要债可以这样做"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":121,"type":"多选题","text":"党的领导在我国社会主义法律中体现为哪些方面( )","options":[{"label":"A","text":"党领导人民制定宪法法律"},{"label":"B","text":"党领导人民实施宪法法律"},{"label":"C","text":"党领导人民适用宪法法律"},{"label":"D","text":"党自身必须在宪法法律范围内活动"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":122,"type":"多选题","text":"我国社会主义法律对中国特色社会主义建设的保障体现在哪些方面( )","options":[{"label":"A","text":"经济建设"},{"label":"B","text":"政治建设"},{"label":"C","text":"文化建设"},{"label":"D","text":"社会建设"},{"label":"E","text":"生态文明建设"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":123,"type":"多选题","text":"依法行使权利是体现权利正当性和保障权利实现的充分必要条件。在现代法治社会，人们行使任何权利、做任何事情都不能超越法律界限。具体要求包括( )。","options":[{"label":"A","text":"行使权利应当符合权利行使的目的"},{"label":"B","text":"行使权利应当符合权利行使的限度"},{"label":"C","text":"行使权利应当符合权利行使的方式"},{"label":"D","text":"行使权利应当符合权利行使的程序"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":124,"type":"多选题","text":"在我国社会主义法律的运行环节中，把法定的权利和义务转化为现实的权利和义务，把文本上的法律转化为现实中的法律运行环节有( )。","options":[{"label":"A","text":"法律制定"},{"label":"B","text":"法律遵守"},{"label":"C","text":"法律执行"},{"label":"D","text":"法律适用"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0},{"id":125,"type":"多选题","text":"我国社会主义法律的优越性主要体现在它的本质上。下列选项中正确表述了我国社会主义法律本质的有( )。","options":[{"label":"A","text":"我国社会主义法律具有先进性和科学性"},{"label":"B","text":"我国社会主义法律是阶级性和人民性的统一"},{"label":"C","text":"我国社会主义法律以习惯法为主，成文法为辅"},{"label":"D","text":"我国社会主义法律是中国特色社会主义建设的重要保障"}],"answer":"","hasAnswer":false,"knowledge":"","sectionTitle":"章节测试","sectionPath":"章节测试","blankCount":0}];
+var SECTIONS = [{"title":"专题一章节测试","path":"章节测试","hasAnswers":false,"questionIds":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]},{"title":"专题二章节测试","path":"章节测试","hasAnswers":false,"questionIds":[26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]},{"title":"章节测试","path":"章节测试","hasAnswers":false,"questionIds":[51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75]},{"title":"章节测试","path":"章节测试","hasAnswers":false,"questionIds":[76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100]},{"title":"章节测试","path":"章节测试","hasAnswers":false,"questionIds":[101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125]}];
+var TOTAL = 125;
+var LABELS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+var mode='practice', currentIdx=0, userAnswers={}, revealed={}, submitted=false;
+var filteredQuestions=[], wrongBook=[], favorites=[], scoreHistory=[];
+var examTimer=null, examSeconds=0, examTimeLimit=0;
+
+var LS_WRONG='cxr_wb4', LS_SCORES='cxr_sc4', LS_ANSWERS='cxr_ma4', LS_DARK='cxr_d4', LS_FAV='cxr_fav4';
+
+// ===== 工具函数 =====
+var _escH=function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+var sameSet=function(a,b){if(!a||!b)return false;a=a.slice().sort();b=b.slice().sort();return a.length===b.length&&a.every(function(v,i){return v===b[i];});};
+
+// 多选题：将 "ABC" 转为索引数组 [0,1,2]
+function getAnsIndices(q){
+  if(!q.answer)return[-1];
+  var ans=q.answer.trim();
+  if(/^[A-H]{2,}$/i.test(ans)&&!/[、,，]/.test(ans)){
+    return ans.split('').map(function(c){return LABELS.indexOf(c.toUpperCase());}).filter(function(i){return i>=0&&i<q.options.length;});
+  }
+  // 单选题：找单个匹配
+  for(var i=0;i<q.options.length;i++){
+    var o=q.options[i];
+    if(o.label===ans||o.label.charAt(0)===ans||o.text===ans) return [i];
+  }
+  var idx=LABELS.indexOf(ans.charAt(0).toUpperCase());
+  return idx>=0&&idx<q.options.length?[idx]:[-1];
+}
+
+function formatAnswer(q){
+  if(!q.answer)return'(未知)';
+  var idxs=getAnsIndices(q);
+  if(idxs.length>0&&idxs[0]>=0) return idxs.map(function(i){var o=q.options[i];return(o?(o.label||LABELS.charAt(i)):'')+'. '+(o?o.text:'');}).join(' / ');
+  return q.answer;
+}
+
+function checkAnswer(q, sel){
+  if(!q.hasAnswer)return null;
+  if(q.type==='多选题'){
+    return sameSet(sel||[], getAnsIndices(q));
+  }
+  var ansI=getAnsIndices(q)[0];
+  if(typeof sel==='number')return sel===ansI;
+  return String(sel).trim()===q.answer.trim();
+}
+
+// ===== 初始化 =====
+function init(){
+  try{
+    wrongBook=JSON.parse(localStorage.getItem(LS_WRONG)||'[]');
+    scoreHistory=JSON.parse(localStorage.getItem(LS_SCORES)||'[]');
+    favorites=JSON.parse(localStorage.getItem(LS_FAV)||'[]');
+    var sa=JSON.parse(localStorage.getItem(LS_ANSWERS)||'{}');
+    QUESTIONS.forEach(function(q){if(!q.hasAnswer&&sa[q.id]){q.answer=sa[q.id];q.hasAnswer=true;}});
+  }catch(e){}
+  if((localStorage.getItem(LS_DARK)||'0')==='1')document.documentElement.classList.add('dark');
+  var sf=document.getElementById('sectionFilter');
+  SECTIONS.forEach(function(s,i){var o=document.createElement('option');o.value=i;o.textContent=s.title+' ('+s.questionIds.length+'题)';sf.appendChild(o);});
+  applyFilter();renderAll();
+}
+
+function applyFilter(){
+  var val=document.getElementById('sectionFilter').value;
+  var search=document.getElementById('searchInput').value.trim().toLowerCase();
+  var pool=val==='all'?QUESTIONS.slice():QUESTIONS.filter(function(q){return SECTIONS[parseInt(val)].questionIds.indexOf(q.id)>=0;});
+  if(search){
+    pool=pool.filter(function(q){
+      if(q.text.toLowerCase().indexOf(search)>=0)return true;
+      if(q.knowledge&&q.knowledge.toLowerCase().indexOf(search)>=0)return true;
+      if(q.options&&q.options.some(function(o){return o.text.toLowerCase().indexOf(search)>=0;}))return true;
+      return false;
+    });
+  }
+  filteredQuestions=pool;
+  currentIdx=Math.min(currentIdx,filteredQuestions.length-1);
+  if(currentIdx<0)currentIdx=0;
+  renderAll();
+}
+
+// ===== 闪卡模式辅助 =====
+function getFlashAnswer(q){
+  var ans=formatAnswer(q);
+  var extra='';
+  if(q.knowledge)extra='<div style="font-size:13px;opacity:.8">💡 '+_escH(q.knowledge)+'</div>';
+  return '<div style="font-weight:700;font-size:18px">'+_escH(ans)+'</div>'+extra;
+}
+
+// ===== 渲染 =====
+function renderAll(){
+  renderQGrid();renderCard();renderAction();renderNav();updateProgress();updateCounts();
+}
+
+function getQ(){return filteredQuestions[currentIdx]||{id:0,type:'',text:'无题目',options:[],answer:'',hasAnswer:false};}
+
+function renderQGrid(){
+  var g=document.getElementById('qGrid'),h='';
+  filteredQuestions.forEach(function(q,i){
+    var c='qgrid-item';
+    if(i===currentIdx)c+=' current';
+    var a=userAnswers[q.id];
+    if(a!==undefined&&a!==null&&a!==''&&(!Array.isArray(a)||a.length>0))c+=' answered';
+    if(wrongBook.indexOf(q.id)>=0)c+=' wrong-mark';
+    if(favorites.indexOf(q.id)>=0)c+=' fav-mark';
+    h+='<div class="'+c+'" data-idx="'+i+'">'+(i+1)+'</div>';
+  });
+  g.innerHTML=h;
+  g.querySelectorAll('.qgrid-item').forEach(function(el){el.addEventListener('click',function(){currentIdx=parseInt(this.dataset.idx);renderAll();});});
+}
+
+function renderCard(){
+  var q=getQ();
+  if(!q||!q.id){document.getElementById('qCard').innerHTML='<p style="text-align:center;color:var(--t2);padding:40px">没有题目</p>';return;}
+  var sel=userAnswers[q.id];
+  var showRes=(mode==='practice'&&revealed[q.id]);
+  var showExam=(mode==='exam'&&submitted);
+  var isMulti=q.type==='多选题';
+  var isFill=q.type==='填空题';
+  var isJudge=q.type==='判断题';
+  var done=showRes||showExam;
+
+  // 闪卡模式特殊渲染
+  if(mode==='flashcard'){
+    var flipped=revealed[q.id];
+    var h='<div class="star-btn'+(favorites.indexOf(q.id)>=0?' active':'')+'" id="starBtn">★</div>';
+    h+='<div class="flashcard-flip'+(flipped?' flipped':'')+'" id="flashCard"><div class="inner">';
+    h+='<div class="flash-front"><div><span class="q-type" style="margin-right:6px">'+_escH(q.type)+'</span>'+(q.hasAnswer?'':' <span class="no-ans-tag">无答案</span>')+'<br><br>'+_escH(q.text)+'</div></div>';
+    h+='<div class="flash-back">'+getFlashAnswer(q)+'</div>';
+    h+='</div></div>';
+    document.getElementById('qCard').innerHTML=h;
+    var fc=document.getElementById('flashCard');
+    if(fc)fc.addEventListener('click',function(){flipped=!flipped;revealed[q.id]=flipped;renderAll();});
+    var sb=document.getElementById('starBtn');
+    if(sb)sb.addEventListener('click',function(e){e.stopPropagation();toggleFav(q.id);});
+    return;
+  }
+
+  var h='<div class="star-btn'+(favorites.indexOf(q.id)>=0?' active':'')+'" id="starBtn">★</div>';
+  h+='<div class="q-head"><span class="q-num">'+(currentIdx+1)+'</span><span class="q-type">'+_escH(q.type)+'</span>';
+  h+='<span class="q-text">'+_escH(q.text)+(q.hasAnswer?'':' <span class="no-ans-tag">答案待补充</span>')+'</span></div>';
+
+  if(q.options&&q.options.length>0){
+    h+='<div class="options">';
+    q.options.forEach(function(opt,oi){
+      var c='opt';
+      if(isMulti){c+=' multi';}
+      if(done){c+=' done';
+        var idxs=getAnsIndices(q);
+        if(itemIn(idxs,oi))c+=' correct';
+        else if(itemIn(sel,oi))c+=' wrong';
+      } else if(isMulti){
+        if(itemIn(sel,oi))c+=' selected';
+      } else {
+        if(sel===oi)c+=' selected';
+      }
+      h+='<div class="'+c+'" data-oi="'+oi+'">';
+      if(isMulti){h+='<span class="o-check">✓</span>';}
+      else {h+='<span class="o-label">'+_escH(opt.label||LABELS.charAt(oi))+'.</span>';}
+      h+='<span>'+_escH(opt.text)+'</span></div>';
+    });
+    h+='</div>';
+    // 多选题确认按钮
+    if(isMulti&&!done){
+      var hasMultiSel=Array.isArray(sel)&&sel.length>0;
+      h+='<div class="confirm-row"><button class="btn-pri" id="btnConfirmMulti" '+(hasMultiSel?'':'disabled')+'>✅ 确认选择</button></div>';
+    }
+  } else if(isFill){
+    var bc=q.blankCount||1;
+    h+='<div class="fill-row">';
+    for(var bi=0;bi<bc;bi++){
+      var fsel=Array.isArray(sel)?(sel[bi]||''):(bi===0?String(sel||''):'');
+      h+='<input type="text" class="fill-input fill-ans" data-bi="'+bi+'" placeholder="填空'+(bc>1?(' '+(bi+1)):'')+'" value="'+_escH(String(fsel))+'"'+(done?' disabled':'')+'>';
+    }
+    h+='</div>';
+  }
+
+  // 结果
+  if(showRes||showExam){
+    var cr=checkAnswer(q,sel);
+    if(cr===null){
+      h+='<div class="result show info"><strong>⚠️ 暂无标准答案</strong></div>';
+    }else{
+      h+='<div class="result show '+(cr?'ok':'err')+'"><strong>'+(cr?'✅ 正确!':'❌ 错误')+'</strong>';
+      h+='<div style="margin-top:4px;font-size:13px">正确答案: <b>'+_escH(formatAnswer(q))+'</b></div>';
+      if(q.knowledge)h+='<div style="font-size:12px;opacity:.8">💡 '+_escH(q.knowledge)+'</div>';
+      h+='</div>';
+    }
+  }
+
+  document.getElementById('qCard').innerHTML=h;
+
+  if(!done){
+    document.querySelectorAll('.opt:not(.done)').forEach(function(el){
+      el.addEventListener('click',function(){handleSelect(parseInt(this.dataset.oi));});
+    });
+    document.querySelectorAll('.fill-ans').forEach(function(el){
+      el.addEventListener('input',function(){handleFill(parseInt(this.dataset.bi),this.value);});
+    });
+    var cm=document.getElementById('btnConfirmMulti');
+    if(cm)cm.addEventListener('click',function(){handleMultiConfirm();});
+  }
+  var sb2=document.getElementById('starBtn');
+  if(sb2)sb2.addEventListener('click',function(){toggleFav(q.id);});
+}
+
+function itemIn(arr,val){return Array.isArray(arr)?arr.indexOf(val)>=0:arr===val;}
+
+function handleSelect(oi){
+  var q=getQ();
+  if(q.type==='多选题'){
+    var cur=userAnswers[q.id];
+    if(!Array.isArray(cur))cur=cur!==undefined?[cur]:[];
+    var idx=cur.indexOf(oi);
+    if(idx>=0)cur.splice(idx,1);else cur.push(oi);
+    userAnswers[q.id]=cur.length>0?cur:null;
+  } else {
+    userAnswers[q.id]=oi;
+    // 单选题在练习模式立即显示答案
+    if(mode==='practice'){
+      revealed[q.id]=true;
+      handleWrongBook(q);
+    }
+  }
+  renderAll();
+}
+
+function handleFill(bi,val){
+  var q=getQ();
+  var arr=userAnswers[q.id];
+  if(!Array.isArray(arr))arr=[];
+  arr[bi]=val;
+  userAnswers[q.id]=arr;
+  renderQGrid();updateProgress();
+}
+
+function handleMultiConfirm(){
+  var q=getQ();
+  if(mode==='practice'){
+    revealed[q.id]=true;
+    handleWrongBook(q);
+  }
+  renderAll();
+}
+
+function handleWrongBook(q){
+  var cr=checkAnswer(q,userAnswers[q.id]);
+  if(cr===false&&wrongBook.indexOf(q.id)<0){wrongBook.push(q.id);saveWrongBook();}
+  if(cr===true&&wrongBook.indexOf(q.id)>=0){wrongBook=wrongBook.filter(function(x){return x!==q.id;});saveWrongBook();}
+}
+
+function toggleFav(qid){
+  var idx=favorites.indexOf(qid);
+  if(idx>=0)favorites.splice(idx,1);else favorites.push(qid);
+  try{localStorage.setItem(LS_FAV,JSON.stringify(favorites));}catch(e){}
+  updateCounts();renderAll();
+}
+
+function renderAction(){
+  var a=document.getElementById('actionArea'),q=getQ();
+  if(!q||!q.id){a.innerHTML='';return;}
+  if(mode==='flashcard'){a.innerHTML='<div style="text-align:center;font-size:13px;color:var(--t2);padding:6px">👆 点击卡片翻转查看答案</div>';return;}
+  var done=revealed[q.id]||submitted;
+  var answered=q.type==='多选题'?(Array.isArray(userAnswers[q.id])&&userAnswers[q.id].length>0):
+    (userAnswers[q.id]!==undefined&&userAnswers[q.id]!==null&&userAnswers[q.id]!=='');
+  if(mode==='practice'){
+    if(!done&&answered&&q.type!=='多选题')a.innerHTML='<button class="big-btn btn-view" id="btnReveal">💡 查看答案</button>';
+    else if(!done)a.innerHTML='<div style="text-align:center;font-size:13px;color:var(--t2);padding:6px">'+(q.type==='多选题'?'勾选后点击「确认选择」':'点击选项查看答案')+'</div>';
+    else a.innerHTML='';
+  } else if(mode==='exam'){
+    if(!submitted){
+      var allDone=filteredQuestions.every(function(qq){
+        var av=userAnswers[qq.id];
+        if(qq.type==='多选题')return Array.isArray(av)&&av.length>0;
+        return av!==undefined&&av!==null&&av!=='';
+      });
+      a.innerHTML='<button class="big-btn btn-submit" id="btnSubmitExam"'+(allDone?'':'disabled')+'>📋 提交试卷</button>';
+      if(!allDone)a.innerHTML+='<div style="text-align:center;font-size:12px;color:var(--t2);margin-top:3px">答完所有题目后才能提交</div>';
+    } else {a.innerHTML='<button class="big-btn btn-retry" id="btnRetryExam">🔄 重新考试</button>';}
+  }
+  var rb=document.getElementById('btnReveal');if(rb)rb.addEventListener('click',function(){revealed[getQ().id]=true;handleWrongBook(getQ());renderAll();});
+  var sb=document.getElementById('btnSubmitExam');if(sb&&!submitted)sb.addEventListener('click',submitExam);
+  var rt=document.getElementById('btnRetryExam');if(rt)rt.addEventListener('click',retryExam);
+}
+
+function renderNav(){
+  document.getElementById('btnPrev').disabled=currentIdx<=0;
+  document.getElementById('btnNext').disabled=currentIdx>=filteredQuestions.length-1;
+  document.getElementById('curIndicator').textContent=(currentIdx+1)+' / '+filteredQuestions.length;
+}
+
+function updateProgress(){
+  var ans=0;
+  filteredQuestions.forEach(function(q){
+    var a=userAnswers[q.id];
+    if(q.type==='多选题'){if(Array.isArray(a)&&a.length>0)ans++;}
+    else if(a!==undefined&&a!==null&&a!=='')ans++;
+  });
+  document.getElementById('progFill').style.width=filteredQuestions.length>0?(ans/filteredQuestions.length*100)+'%':'0%';
+  document.getElementById('progLabel').textContent='第 '+(currentIdx+1)+' / '+filteredQuestions.length+' 题';
+  document.getElementById('ansCount').textContent='已答: '+ans;
+}
+
+function updateCounts(){
+  document.getElementById('wrongCount').textContent=wrongBook.length>0?' ('+wrongBook.length+')':'';
+  document.getElementById('favCount').textContent=favorites.length>0?' ('+favorites.length+')':'';
+  document.getElementById('btnClearWrong').style.display=wrongBook.length>0?'':'none';
+}
+
+function saveWrongBook(){try{localStorage.setItem(LS_WRONG,JSON.stringify(wrongBook));}catch(e){}updateCounts();renderQGrid();}
+
+// ===== 考试模式 =====
+function submitExam(){
+  submitted=true;
+  clearInterval(examTimer);
+  filteredQuestions.forEach(function(q){
+    var cr=checkAnswer(q,userAnswers[q.id]);
+    if(q.hasAnswer&&cr===false&&wrongBook.indexOf(q.id)<0)wrongBook.push(q.id);
+  });
+  saveWrongBook();
+  var correct=0,totalAns=0;
+  filteredQuestions.forEach(function(q){
+    if(!q.hasAnswer)return;
+    totalAns++;
+    if(checkAnswer(q,userAnswers[q.id]))correct++;
+  });
+  var score=totalAns>0?Math.round(correct/totalAns*100):0;
+  scoreHistory.push({date:new Date().toISOString(),score:score,correct:correct,totalQ:totalAns,totalAll:filteredQuestions.length,section:document.getElementById('sectionFilter').selectedOptions[0].textContent,mode:'exam',time:examSeconds});
+  try{localStorage.setItem(LS_SCORES,JSON.stringify(scoreHistory));}catch(e){}
+  renderAll();
+  showScorePopup(score,correct,totalAns);
+}
+
+function retryExam(){submitted=false;userAnswers={};revealed={};examSeconds=0;renderAll();}
+function showScorePopup(score,correct,totalAns){
+  var ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center';
+  ov.innerHTML='<div style="background:var(--card);border-radius:16px;padding:30px;text-align:center;max-width:360px;width:90%;box-shadow:0 12px 48px rgba(0,0,0,.3)"><div style="font-size:48px;margin-bottom:8px">'+(score>=60?'🎉':'😢')+'</div><div style="font-size:36px;font-weight:800;color:'+(score>=60?'var(--ok)':'var(--err)')+'">'+score+'分</div><div style="font-size:14px;color:var(--t2);margin:8px 0">答对 '+correct+'/'+totalAns+' 题'+(examSeconds>0?' | 用时 '+formatTime(examSeconds):'')+'</div><button style="margin-top:16px;padding:10px 32px;border:none;border-radius:8px;background:var(--pri);color:#fff;font-size:15px;font-weight:600;cursor:pointer">确定</button></div>';
+  document.body.appendChild(ov);
+  ov.querySelector('button').addEventListener('click',function(){ov.remove();});
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+}
+function formatTime(s){var m=Math.floor(s/60),sec=s%60;return (m>0?m+'分':'')+sec+'秒';}
+
+// ===== 弹窗 =====
+function showWrongBook(){
+  var m=document.getElementById('wrongBookModal'),c=document.getElementById('wrongBookContent');
+  if(wrongBook.length===0){c.innerHTML='<p style="color:var(--t2);text-align:center;padding:20px">🎉 错题本为空!</p>';m.classList.add('show');return;}
+  var h='<p style="margin-bottom:8px;color:var(--t2)">共 <b>'+wrongBook.length+'</b> 条</p><button class="btn-sm btn-pri" id="btnPracticeWrong" style="margin-bottom:8px">📖 练错题</button> <button class="btn-sm btn-out" id="btnExamWrong" style="margin-bottom:8px">📝 错题考试</button>';
+  wrongBook.forEach(function(qid){
+    var q=QUESTIONS.find(function(x){return x.id===qid;});if(!q)return;
+    h+='<div style="padding:10px;margin:4px 0;background:var(--bg);border-radius:8px;font-size:13px"><b>#'+q.id+'</b> ['+_escH(q.type)+'] '+_escH(q.text)+'<div style="color:var(--ok);margin-top:3px">答案: '+_escH(formatAnswer(q))+'</div><button class="btn-sm btn-err rem-wb" data-qid="'+q.id+'" style="margin-top:3px;font-size:11px">移除</button></div>';
+  });
+  c.innerHTML=h;
+  m.classList.add('show');
+  c.querySelectorAll('.rem-wb').forEach(function(b){b.addEventListener('click',function(){wrongBook=wrongBook.filter(function(x){return x!==parseInt(this.dataset.qid);});saveWrongBook();showWrongBook();});});
+  document.getElementById('btnPracticeWrong').addEventListener('click',function(){m.classList.remove('show');filteredQuestions=QUESTIONS.filter(function(q){return wrongBook.indexOf(q.id)>=0;});currentIdx=0;userAnswers={};revealed={};submitted=false;setMode('practice');});
+  document.getElementById('btnExamWrong').addEventListener('click',function(){m.classList.remove('show');filteredQuestions=QUESTIONS.filter(function(q){return wrongBook.indexOf(q.id)>=0;});currentIdx=0;userAnswers={};revealed={};submitted=false;setMode('exam');});
+}
+
+function showScores(){
+  var m=document.getElementById('scoresModal'),c=document.getElementById('scoresContent');
+  if(scoreHistory.length===0){c.innerHTML='<p style="color:var(--t2);text-align:center;padding:20px">暂无记录</p>';}
+  else {
+    var h='<table><thead><tr><th>时间</th><th>章节</th><th>得分</th><th>操</th></tr></thead><tbody>';
+    scoreHistory.slice().reverse().forEach(function(r,i){
+      var d=new Date(r.date),ds=d.getFullYear()+'-'+s2(d.getMonth()+1)+'-'+s2(d.getDate())+' '+s2(d.getHours())+':'+s2(d.getMinutes());
+      h+='<tr><td>'+ds+'</td><td>'+_escH(r.section||'-')+'</td><td style="font-weight:700;color:'+(r.score>=60?'var(--ok)':'var(--err)')+'">'+r.score+'分 ('+r.correct+'/'+r.totalQ+')'+(r.time?' '+formatTime(r.time):'')+'</td><td><button class="btn-sm btn-err del-sc" data-idx="'+(scoreHistory.length-1-i)+'" style="font-size:11px">✕</button></td></tr>';
+    });
+    h+='</tbody></table><button class="btn-sm btn-err" id="btnClearScores" style="margin-top:8px">🗑 清空</button>';
+    c.innerHTML=h;
+  }
+  m.classList.add('show');
+  c.querySelectorAll('.del-sc').forEach(function(b){b.addEventListener('click',function(){scoreHistory.splice(parseInt(this.dataset.idx),1);try{localStorage.setItem(LS_SCORES,JSON.stringify(scoreHistory));}catch(e){}showScores();});});
+  var cb=document.getElementById('btnClearScores');if(cb)cb.addEventListener('click',function(){if(confirm('清空所有成绩？')){scoreHistory=[];try{localStorage.setItem(LS_SCORES,'[]');}catch(e){}showScores();}});
+}
+
+function showFavorites(){
+  var m=document.getElementById('favModal'),c=document.getElementById('favContent');
+  if(favorites.length===0){c.innerHTML='<p style="color:var(--t2);text-align:center;padding:20px">⭐ 还没有收藏</p>';m.classList.add('show');return;}
+  var h='<p style="margin-bottom:8px;color:var(--t2)">共 <b>'+favorites.length+'</b> 题</p><button class="btn-sm btn-pri" id="btnFavPractice" style="margin-bottom:8px">📖 练收藏</button> <button class="btn-sm btn-out" id="btnFavExam" style="margin-bottom:8px">📝 收藏考试</button>';
+  favorites.forEach(function(qid){
+    var q=QUESTIONS.find(function(x){return x.id===qid;});if(!q)return;
+    h+='<div style="padding:8px;margin:4px 0;background:var(--bg);border-radius:8px;font-size:13px"><b>#'+q.id+'</b> ['+_escH(q.type)+'] '+_escH(q.text).substring(0,80)+'<button class="btn-sm btn-err rem-fav" data-qid="'+q.id+'" style="margin-left:8px;font-size:11px">✕</button></div>';
+  });
+  c.innerHTML=h;
+  m.classList.add('show');
+  c.querySelectorAll('.rem-fav').forEach(function(b){b.addEventListener('click',function(){toggleFav(parseInt(this.dataset.qid));showFavorites();});});
+  document.getElementById('btnFavPractice').addEventListener('click',function(){m.classList.remove('show');filteredQuestions=QUESTIONS.filter(function(q){return favorites.indexOf(q.id)>=0;});currentIdx=0;userAnswers={};revealed={};submitted=false;setMode('practice');});
+  document.getElementById('btnFavExam').addEventListener('click',function(){m.classList.remove('show');filteredQuestions=QUESTIONS.filter(function(q){return favorites.indexOf(q.id)>=0;});currentIdx=0;userAnswers={};revealed={};submitted=false;setMode('exam');});
+}
+
+function s2(n){return String(n).padStart(2,'0');}
+
+// ===== 模式切换 =====
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.mode-tab[data-mode]').forEach(function(t){t.classList.toggle('active',t.dataset.mode===m);});
+  if(m==='practice'){submitted=false;}
+  else if(m==='exam'){revealed={};submitted=false;}
+  else if(m==='flashcard'){revealed={};submitted=false;}
+  document.getElementById('examTimer').style.display=m==='exam'?'':'none';
+  renderAll();
+}
+
+// ===== 事件 =====
+document.querySelectorAll('.mode-tab[data-mode]').forEach(function(t){t.addEventListener('click',function(){setMode(this.dataset.mode);});});
+document.getElementById('btnWrongBook').addEventListener('click',showWrongBook);
+document.getElementById('btnScores').addEventListener('click',showScores);
+document.getElementById('btnFavorites').addEventListener('click',showFavorites);
+document.getElementById('sectionFilter').addEventListener('change',function(){currentIdx=0;userAnswers={};revealed={};submitted=false;applyFilter();});
+document.getElementById('searchInput').addEventListener('input',function(){currentIdx=0;applyFilter();});
+document.getElementById('btnRandom').addEventListener('click',function(){
+  for(var i=filteredQuestions.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=filteredQuestions[i];filteredQuestions[i]=filteredQuestions[j];filteredQuestions[j]=t;}
+  currentIdx=0;userAnswers={};revealed={};submitted=false;renderAll();
+});
+document.getElementById('btnPrev').addEventListener('click',function(){if(currentIdx>0){currentIdx--;renderAll();}});
+document.getElementById('btnNext').addEventListener('click',function(){if(currentIdx<filteredQuestions.length-1){currentIdx++;renderAll();}});
+document.getElementById('btnToggleDark').addEventListener('click',function(){document.documentElement.classList.toggle('dark');try{localStorage.setItem(LS_DARK,document.documentElement.classList.contains('dark')?'1':'0');}catch(e){}});
+document.getElementById('btnReset').addEventListener('click',function(){userAnswers={};revealed={};submitted=false;renderAll();});
+document.getElementById('btnClearWrong').addEventListener('click',function(){if(confirm('清空错题本？')){wrongBook=[];saveWrongBook();}});
+document.getElementById('closeWrongBook').addEventListener('click',function(){document.getElementById('wrongBookModal').classList.remove('show');});
+document.getElementById('closeScores').addEventListener('click',function(){document.getElementById('scoresModal').classList.remove('show');});
+document.getElementById('closeFav').addEventListener('click',function(){document.getElementById('favModal').classList.remove('show');});
+document.querySelectorAll('.modal-overlay').forEach(function(ov){ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('show');});});
+document.addEventListener('keydown',function(e){
+  if(document.querySelector('.modal-overlay.show'))return;
+  if(e.key==='ArrowLeft'){if(currentIdx>0){currentIdx--;renderAll();}}
+  if(e.key==='ArrowRight'){if(currentIdx<filteredQuestions.length-1){currentIdx++;renderAll();}}
+});
+init();
+</script>
+</body>
+</html>
