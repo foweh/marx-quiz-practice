@@ -175,7 +175,6 @@
     // 扫描所有章节节点
     const catalogItems = document.querySelectorAll('.posCatalog_name');
     const chapters = [];
-    let chapterStack = [{ title: '根', level: 0 }];
 
     catalogItems.forEach(el => {
       const onclick = (el.getAttribute('onclick') || '').replace(/&#39;/g, "'").replace(/&quot;/g, '"');
@@ -285,14 +284,13 @@
     const questions = [];
 
     // 查找题目容器
-    const qDivs = doc.querySelectorAll('.TiMu.newTiMu');
+    let qDivs = doc.querySelectorAll('.TiMu.newTiMu');
     if (qDivs.length === 0) {
-      // 尝试其他选择器
-      const altDivs = doc.querySelectorAll('.TiMu');
-      if (altDivs.length === 0) return { questions: [], hasAnswers: false };
+      qDivs = doc.querySelectorAll('.TiMu');
+      if (qDivs.length === 0) return { questions: [], hasAnswers: false };
     }
 
-    (qDivs.length ? qDivs : doc.querySelectorAll('.TiMu')).forEach((div, idx) => {
+    qDivs.forEach((div, idx) => {
       const q = { id: idx + 1 };
 
       // ── 题型识别（v4：以 newZy_TItle 文本为准，CSS 类名兜底）──
@@ -566,30 +564,31 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>练习 - \${escHtml(courseName)}</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>练习 - ${escHtml(courseName)}</title>
 <style>
 :root{--bg:#f0f2f5;--card:#fff;--txt:#1a1a2e;--t2:#6b7280;--pri:#4f46e5;--ok:#059669;--err:#dc2626;--warn:#d97706;--brd:#e5e7eb;--hover:#f3f4f6;--sh:0 2px 8px rgba(0,0,0,.06)}
 .dark{--bg:#111827;--card:#1f2937;--txt:#f9fafb;--t2:#9ca3af;--pri:#818cf8;--ok:#34d399;--err:#f87171;--warn:#fbbf24;--brd:#374151;--hover:#374151;--sh:0 2px 8px rgba(0,0,0,.3)}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;padding:16px}
-.container{max-width:740px;margin:0 auto}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;padding:16px;-webkit-font-smoothing:antialiased;touch-action:manipulation}
+.container{max-width:740px;margin:0 auto;width:100%}
 
 .topbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px}
 .topbar h1{font-size:20px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
 .meta{font-size:12px;color:var(--t2)}
 
-.mode-tabs{display:flex;gap:4px;background:var(--card);border-radius:10px;padding:4px;margin-bottom:10px;box-shadow:var(--sh);flex-wrap:wrap}
-.mode-tab{flex:1 1 auto;padding:8px 10px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--t2);transition:all .15s;text-align:center}
+.mode-tabs{display:flex;gap:4px;background:var(--card);border-radius:10px;padding:4px;margin-bottom:10px;box-shadow:var(--sh);flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none}
+.mode-tabs::-webkit-scrollbar{display:none}
+.mode-tab{flex:0 0 auto;padding:9px 12px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--t2);transition:all .15s;text-align:center;min-width:70px;touch-action:manipulation}
 .mode-tab.active{background:var(--pri);color:#fff}
 .mode-tab:hover:not(.active){background:var(--hover)}
 
 .subbar{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
-.subbar select,.subbar input,.subbar button{padding:6px 10px;border-radius:7px;font-size:12px;border:1px solid var(--brd);background:var(--card);color:var(--txt);cursor:pointer}
-.subbar select{min-width:130px}
+.subbar select,.subbar input,.subbar button{padding:8px 12px;border-radius:8px;font-size:13px;border:1px solid var(--brd);background:var(--card);color:var(--txt);cursor:pointer;-webkit-appearance:none;appearance:none}
+.subbar select{min-width:140px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center}
 .subbar input{flex:1;min-width:120px;cursor:text}
 .subbar button{font-weight:600;white-space:nowrap}
-.btn-sm{padding:5px 10px;font-size:12px;border-radius:6px;border:none;cursor:pointer;font-weight:600;transition:all .12s}
+.btn-sm{padding:8px 14px;font-size:13px;border-radius:8px;border:none;cursor:pointer;font-weight:600;transition:all .12s;touch-action:manipulation}
 .btn-sm:active{transform:scale(.96)}
 .btn-pri{background:var(--pri);color:#fff}
 .btn-out{background:transparent;color:var(--pri);border:1px solid var(--pri)}
@@ -605,8 +604,8 @@ body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background
 .progress-fill{height:100%;background:var(--pri);transition:width .3s;border-radius:2px}
 .progress-info{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-top:3px}
 
-.qgrid{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;max-height:110px;overflow-y:auto;padding:3px}
-.qgrid-item{width:28px;height:28px;border-radius:5px;border:1px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;cursor:pointer;background:var(--card);color:var(--txt);transition:all .12s}
+.qgrid{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;max-height:120px;overflow-y:auto;padding:4px}
+.qgrid-item{width:32px;height:32px;border-radius:6px;border:1.5px solid var(--brd);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;cursor:pointer;background:var(--card);color:var(--txt);transition:all .12s;touch-action:manipulation}
 .qgrid-item.current{border-color:var(--pri);background:#eef2ff;color:var(--pri)}
 .dark .qgrid-item.current{background:#312e81}
 .qgrid-item.answered{background:#d1fae5;border-color:var(--ok);color:#065f46}
@@ -616,8 +615,8 @@ body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background
 .qgrid-item.fav-mark{box-shadow:0 0 0 2px #f59e0b}
 .qgrid-item:hover{transform:scale(1.1)}
 
-.card{background:var(--card);border-radius:12px;padding:20px 18px;margin-bottom:10px;box-shadow:var(--sh);min-height:160px;position:relative}
-.star-btn{position:absolute;top:10px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:#d1d5db;transition:all .15s;z-index:2}
+.card{background:var(--card);border-radius:14px;padding:20px 18px;margin-bottom:12px;box-shadow:var(--sh);min-height:180px;position:relative}
+.star-btn{position:absolute;top:12px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#d1d5db;transition:all .15s;z-index:2;width:36px;height:36px;display:flex;align-items:center;justify-content:center}
 .star-btn.active{color:#f59e0b;filter:drop-shadow(0 0 2px rgba(245,158,11,.5))}
 .star-btn:hover{transform:scale(1.2)}
 
@@ -628,11 +627,12 @@ body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background
 .no-ans-tag{font-size:10px;background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:4px;margin-left:4px;vertical-align:middle}
 .q-text{font-size:16px;line-height:1.6;font-weight:500}
 
-.options{display:flex;flex-direction:column;gap:6px;margin:8px 0}
-.opt{display:flex;align-items:flex-start;padding:9px 12px;border:2px solid var(--brd);border-radius:10px;cursor:pointer;transition:all .12s;font-size:15px;line-height:1.45}
+.options{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.opt{display:flex;align-items:flex-start;padding:14px 16px;border:2px solid var(--brd);border-radius:12px;cursor:pointer;transition:all .12s;font-size:16px;line-height:1.55;touch-action:manipulation;min-height:56px}
 .opt:hover:not(.done){border-color:var(--pri);background:var(--hover)}
-.opt .o-label{font-weight:700;color:var(--t2);margin-right:8px;min-width:20px;flex-shrink:0}
-.opt .o-check{width:18px;height:18px;border:2px solid var(--brd);border-radius:4px;margin-right:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:all .12s}
+.opt:active:not(.done){transform:scale(.98)}
+.opt .o-label{font-weight:700;color:var(--t2);margin-right:10px;min-width:24px;flex-shrink:0;font-size:17px}
+.opt .o-check{width:22px;height:22px;border:2px solid var(--brd);border-radius:5px;margin-right:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:transparent;transition:all .12s}
 .opt.selected:not(.done){border-color:var(--pri);background:#eef2ff}
 .dark .opt.selected:not(.done){background:#312e81}
 .opt.selected .o-check{border-color:var(--pri);background:var(--pri);color:#fff}
@@ -642,8 +642,8 @@ body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background
 .dark .opt.wrong{background:#7f1d1d}
 .opt.done{cursor:default}
 
-.fill-row{display:flex;flex-direction:column;gap:6px;margin:8px 0}
-.fill-input{width:100%;padding:9px 12px;border:2px solid var(--brd);border-radius:8px;font-size:15px;background:var(--card);color:var(--txt);outline:none}
+.fill-row{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.fill-input{width:100%;padding:14px 16px;border:2px solid var(--brd);border-radius:10px;font-size:16px;background:var(--card);color:var(--txt);outline:none}
 .fill-input:focus{border-color:var(--pri)}
 
 .confirm-row{display:flex;gap:8px;margin:10px 0}
@@ -663,13 +663,14 @@ body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background
 .flash-back{background:#d1fae5;color:#065f46;position:absolute;inset:0;transform:rotateY(180deg);display:flex;flex-direction:column;gap:8px}
 .dark .flash-back{background:#064e3b;color:#6ee7b7}
 
-.nav-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
-.nav-btn{padding:8px 18px;border:2px solid var(--brd);border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;background:var(--card);color:var(--txt);transition:all .15s}
+.nav-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.nav-btn{padding:12px 24px;border:2px solid var(--brd);border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;background:var(--card);color:var(--txt);transition:all .15s;touch-action:manipulation;min-width:100px}
 .nav-btn:hover{border-color:var(--pri);color:var(--pri)}
+.nav-btn:active{transform:scale(.98)}
 .nav-btn:disabled{opacity:.35;cursor:not-allowed}
-.current-indicator{font-size:13px;font-weight:600;color:var(--pri);white-space:nowrap}
+.current-indicator{font-size:14px;font-weight:600;color:var(--pri);white-space:nowrap}
 
-.big-btn{display:block;width:100%;padding:12px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;margin:5px 0}
+.big-btn{display:block;width:100%;padding:16px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;margin:6px 0;touch-action:manipulation}
 .big-btn:active{transform:scale(.98)}
 .btn-submit{background:var(--pri);color:#fff}
 .btn-view{background:var(--warn);color:#fff}
@@ -685,22 +686,50 @@ body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background
 .modal th{color:var(--t2);font-weight:600}
 
 @media(max-width:500px){
+  body{padding:8px}
+  .topbar h1{font-size:17px;max-width:160px}
+  .meta{font-size:11px}
+  .mode-tab{font-size:12px;padding:7px 10px;min-width:65px}
+  .subbar select,.subbar input,.subbar button{padding:7px 10px;font-size:12px}
+  .subbar select{min-width:120px}
+  .btn-sm{padding:7px 12px;font-size:12px}
+  .qgrid-item{width:30px;height:30px;font-size:12px}
+  .card{padding:16px 14px;min-height:160px}
+  .star-btn{font-size:22px;width:32px;height:32px}
+  .q-head{gap:6px;margin-bottom:10px}
+  .q-num{min-width:24px;height:24px;font-size:11px}
+  .q-type{font-size:10px;padding:2px 6px}
+  .q-text{font-size:16px;line-height:1.6}
+  .options{gap:7px;margin:8px 0}
+  .opt{padding:12px 14px;font-size:15px;min-height:52px}
+  .opt .o-label{font-size:16px;margin-right:8px;min-width:22px}
+  .opt .o-check{width:20px;height:20px;margin-right:8px}
+  .fill-input{padding:12px 14px;font-size:15px}
+  .nav-btn{padding:10px 18px;font-size:14px;min-width:85px}
+  .current-indicator{font-size:13px}
+  .big-btn{padding:14px;font-size:15px}
+  .result{padding:10px 12px;font-size:13px}
+}
+
+@media(max-width:380px){
   body{padding:6px}
-  .topbar h1{font-size:16px;max-width:180px}
-  .card{padding:14px 10px}
-  .q-text{font-size:14px}
-  .opt{font-size:13px;padding:7px 10px}
-  .nav-btn{padding:6px 12px;font-size:13px}
-  .qgrid-item{width:26px;height:26px;font-size:10px}
-  .mode-tab{font-size:11px;padding:6px 7px}
+  .topbar h1{font-size:16px;max-width:130px}
+  .mode-tab{font-size:11px;padding:6px 8px;min-width:58px}
+  .subbar select{min-width:100px}
+  .qgrid-item{width:28px;height:28px;font-size:11px}
+  .card{padding:14px 12px}
+  .q-text{font-size:15px}
+  .opt{padding:10px 12px;font-size:14px}
+  .nav-btn{padding:8px 14px;font-size:13px;min-width:75px}
+  .big-btn{padding:12px;font-size:14px}
 }
 </style>
 </head>
 <body>
 <div class="container">
 <div class="topbar">
-  <h1>📝 \${escHtml(courseName)}</h1>
-  <span class="meta">\${total}题 · \${withAns}有答案</span>
+  <h1>📝 ${escHtml(courseName)}</h1>
+  <span class="meta">${total}题 · ${withAns}有答案</span>
 </div>
 
 <div class="mode-tabs">
@@ -724,7 +753,7 @@ body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background
 
 <div class="progress-wrap">
   <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
-  <div class="progress-info"><span id="progLabel">第 1 / \${total} 题</span><span id="ansCount">已答: 0</span></div>
+  <div class="progress-info"><span id="progLabel">第 1 / ${total} 题</span><span id="ansCount">已答: 0</span></div>
 </div>
 
 <div class="qgrid" id="qGrid"></div>
@@ -743,10 +772,10 @@ body{font-family:system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background
 <div class="modal-overlay" id="favModal"><div class="modal"><button class="modal-close" id="closeFav">&times;</button><h3>⭐ 收藏夹</h3><div id="favContent"></div></div></div>
 
 <script>
-var QUESTIONS = \${questionsJSON};
-var SECTIONS = \${sectionsJSON};
-var TOTAL = \${total};
-var LABELS = '\${labelsStr}';
+var QUESTIONS = ${questionsJSON};
+var SECTIONS = ${sectionsJSON};
+var TOTAL = ${total};
+var LABELS = '${labelsStr}';
 
 var mode='practice', currentIdx=0, userAnswers={}, revealed={}, submitted=false;
 var filteredQuestions=[], wrongBook=[], favorites=[], scoreHistory=[];
