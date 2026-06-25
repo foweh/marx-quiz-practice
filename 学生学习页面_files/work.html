@@ -1,0 +1,919 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0439)https://mooc1.chaoxing.com/mooc-ans/work/selectWorkQuestionYiPiYue?courseId=218936318&workId=50044193&workAnswerId=56795576&api=1&knowledgeid=447212179&classId=140434938&oldWorkId=b3705a270fda4c18a1d567104d6ee006&jobid=work-b3705a270fda4c18a1d567104d6ee006&type=&isphone=false&submit=false&enc=d25ac3635f49a05f424c904f250a9413&cpi=410093475&mooc2=1&skipHeader=true&originJobId=work-b3705a270fda4c18a1d567104d6ee006&fromType=&wMicroNodeId=0 -->
+<html xmlns="http://www.w3.org/1999/xhtml" nighteye="disabled" data-immersive-translate-page-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script>
+    _HOST_ = "//mooc1.chaoxing.com";
+    _CP_ = "/mooc-ans";
+    _HOST_CP1_ = "//mooc1.chaoxing.com/mooc-ans";
+    // _HOST_CP2_ = _HOST_ + _CP_;
+    _HOST_CP2_ = _CP_;
+</script>
+
+<title>查看已批阅作业</title>
+<link href="./ZuoYe.css" type="text/css" rel="stylesheet">
+<link href="./percentBar.css" rel="stylesheet" type="text/css">
+<link href="./connLine.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="./pop.css">
+<link rel="stylesheet" type="text/css" href="./oralTest.css">
+	<link rel="stylesheet" type="text/css" href="./CeYanNew.css">
+	<link rel="stylesheet" type="text/css" href="./CeYanViewNew.css">
+	<link rel="stylesheet" type="text/css" href="./q_marking_icon.css">
+<link href="./questionBankUsual.css" type="text/css" rel="stylesheet"><script type="text/javascript" src="./jquery.min.js.下载"></script>
+<script type="text/javascript" src="./jquery-migrate.min.js.下载"></script><script src="./right.js.下载"></script>
+<script src="./domain.js.下载"></script>
+	<script type="text/javascript" src="./poptoast.js.下载"></script>
+	<script type="text/javascript" src="./poplayout(1).js.下载"></script>
+<script src="./preview-attach.js.下载"></script><script src="./imgUtil.js.下载"></script>
+<script src="./attach-mark.js.下载"></script><script type="text/javascript">window.SUPPORT_AUDIO_SETTING = true; window.SUPPORT_AUDIO_CONTROL = true;</script>
+<script src="./work-audio-playtimes.js.下载"></script>
+
+<style type="text/css">.hljs-ln{border-collapse:collapse}.hljs-ln td{padding:0}.hljs-ln-n:before{content:attr(data-line-number)}</style><style>.clearfix:after{content: " ";display: block;height: 0px;clear: both;}</style><style data-id="immersive-translate-input-injected-css"></style></head><body style="zoom: 1;"><input type="hidden" id="fromDevice" value="mooc2" class="clearfix">
+
+<div class="maskDiv" style="display:none;z-index:1000;" id="audioLimitTimesWinNew">
+    <div class="popSetDiv wid440">
+        <div class="popHead RadisTop">
+            <a href="javascript:;" class="popClose fr" onclick="$(&#39;#audioLimitTimesWinNew&#39;).fullFadeOut();">
+                <img src="./popClose(2).png">
+            </a>
+            <p class="fl fs18 color1">提示</p>
+        </div>
+        <div class="het62"></div>
+        <p class="popWord fs16 color2 audioLimitTimesTip">此附件仅支持打开 <span></span> 次，你已打开 <span></span> 次，不能再次打开</p>
+        <div class="popBottom RadisBom">
+            <a href="javascript:;" class="jb_btn jb_btn_92 fr fs14" onclick="$(&#39;#audioLimitTimesWinNew&#39;).fullFadeOut();">知道了</a>
+        </div>
+        <div class="het72"></div>
+    </div>
+</div>
+
+<div class="AlertCon02" style="width:400px; height:200px;display:none;" id="audioLimitTimesWin">
+    <h3 class="clearfix">
+        <a href="javascript:;" class="closed02 fr" onclick="WAY.box.hide();$(&#39;#audioLimitTimesWin&#39;).css(&#39;display&#39;,&#39;none&#39;)" style="margin-top:1px;"></a>
+    </h3>
+    <div class="con03">
+        <p class="audioLimitTimesTip" style="margin-top:16px;text-align:left;">此附件仅支持打开 <span></span> 次，你已打开 <span></span> 次，不能再次打开</p>
+        <div style="margin-top:60px;">
+            <a class="bluebtn" href="javascript:;" onclick="WAY.box.hide();$(&#39;#audioLimitTimesWin&#39;).css(&#39;display&#39;,&#39;none&#39;)">知道了</a>
+        </div>
+    </div>
+</div><style>
+	#ZyBottom .TiMu img{max-width:558px;}
+	.teacherComments img{max-width: 558px;}
+	
+	.sc{display:none;}
+	.wrapper .load-bar {width:413px;}
+	.ulTop span{margin-right:0px;}
+	.thirdUlList{border-bottom:none;}
+	.ulTop a{color:#202020;}
+	.answerTable td:nth-child(3){width:43%;}
+	.groupTitile{width: 123px;}
+	em{font-style: italic;}
+	.mask{width:100%;height:100%;background:#fff;opacity:0.6;position:absolute;z-index:10000;top:0;left:0;}
+	.AlertCon02{width:528px;height:238px;border:solid 1px #c5c5c5;background:#FFF;padding:10px;margin:0 auto;bottom:220px;position: fixed;left: 50%;margin-left: -172px;z-index:10001;}
+	.closed02{width:14px;height:14px;background:url(//mooc1.chaoxing.com/mooc-ans/space/new/moocIndex/images/icons.png) no-repeat left -283px;}
+	.con03{padding:20px;text-align:center;font-size:16px;color:#202020;}
+	.marTop30{margin-top:30px;}
+	/*.bluebtn{display:inline-block;height:28px;line-height:25px;padding:0 10px;background:#7b9e31;font-size:14px;color:#FFF;border-radius:2px;}*/
+	/*.bluebtn:hover{color:#FFF;background:#4b6f00;}*/
+	/*.graybtn{display:inline-block;height:28px;line-height:25px;padding:0 10px;background:#f4f4f4;font-size:14px;color:#202020;border-radius:2px;}*/
+	/*.graybtn:hover{color:#202020;background:#e3e0e0;}*/
+	.marleft10{margin-left:20px;}
+	.height_number{font-size:16px;padding-top:15px;overflow:hidden;}
+	.height_number span{color:#7b9e31}
+	.number_word{float:left}
+	.popDiv{top: 350px !important;}
+	.btn_92_cancel:hover {color: #3A8BFF !important;}
+	.jb_btn_92:hover {color: #FFFFFF !important;}
+	.maskDiv{z-index: 10000 !important;}
+	/*B型题*/
+	.wid975{width:580px;padding-top:6px;float:left;}
+	.B_grayinfo{color: #999;font-size:14px;margin-bottom:16px;}
+	.mark_letter{ line-height:20px;font-size:14px;color:#333}
+	.mark_letter li{ margin-bottom:16px;}
+	.mark_letter p{display:inline;}
+	.B_stem{padding:20px 0 30px 0}
+	.B_stem .order_answer p{display:inline;}
+	.B_stem .order_answer{font-size:14px;color:#181E33;padding-bottom:16px;line-height:20px;}
+	.B_answer_tit{font-size:14px;padding-bottom:10px;overflow:hidden;font-weight:bold;margin-bottom:30px;}
+	.B_answer_tit p{display:inline-block;font-weight:normal}
+	.mark_judge{ width:32px; height:32px; position:relative; margin-right:20px;}
+	.mark_judge_name{ width:32px; height:32px; font-size:32px; cursor:pointer;}
+	.mark_judge_name:hover{ opacity:.7;}
+	.blankcon {position:relative;padding-right:30px}
+	.blankcon i.dui,.blankcon i.cuo {position:absolute;right:0;top:0;}
+	.Cy_TItle1 h2{ font:bold 16px/40px "Microsoft YaHei"; color:#202020;margin-top:20px;}
+	.knowledgeList li{padding:0;width: auto;max-width: none;}
+	.knowledgeList li a{display:block;padding:6px 14px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;color: #8A8B99;max-width: 300px;}
+	.knowledgeList li a:hover{color:#3A8BFF}
+	.myanswerScore .font14{font-weight:600;margin-bottom:16px}
+	.newAnswerBx .Py_tk{padding: 0 0 15px 0}
+</style>
+<link rel="stylesheet" type="text/css" href="./questionCommon.css">
+<script>
+$(function(){
+	$(".TiMu").hover(function(){
+		$(this).find(".sc").show();
+    },function(){
+    	$(this).find(".sc").hide();
+    })
+
+})
+</script>
+
+
+
+	<link rel="stylesheet" type="text/css" href="./prompt.css">
+<style>
+	.mask-no-bg{background:none!important;}
+	.mask-no-bg .popDiv{box-shadow: 0px 4px 36px rgba(0, 0, 0, 0.08);}
+	#workpop .popDiv{top:50% !important;transform: translate(-50%,-50%) !important;left:50% !important;bottom: auto !important;margin-top:0 !important;margin-left:0 !important}
+	#body-content .code-preview-div .popDiv{left:40%!important;top: 40%!important;}
+	#body-content .code-preview-div .wid840{width:840px!important;}
+</style>
+<div class="maskDiv" style="display:none;" id="workpop">
+	<div class="popDiv wid440 Marking">
+		<div class="popHead" id="workpopFocus" role="alertdialog" tabindex="0">
+			<a id="popCloseFocus" href="javascript:;" class="popClose fr" onclick="popClickFunc()" tabindex="-1"><img src="./popClose.png" id="popCloseFocusImg" onkeydown="if(event.keyCode == 13){popCloseFocus();}" role="button" tabindex="-1" aria-label="关闭"></a>
+			<p class="fl fs18 colorDeep" tabindex="0" role="option">提示</p>
+		</div>
+		<div class="het62"></div>
+		<p class="popWord fs16 colorIn" id="popcontent" tabindex="0"></p>
+
+		<div class="popBottom">
+			<a href="javascript:;" id="popok" class="jb_btn jb_btn_92 fr fs14" tabindex="0" role="button" aria-label="确定"></a>
+			<a href="javascript:;" id="popno" class="btnBlue btn_92_cancel fr fs14" onkeydown="popnoFocus();" tabindex="0" role="button" aria-label="取消"></a>
+		</div>
+		<div class="het72"></div>
+			</div>
+</div>
+
+<div class="mask-no-bg" style="display:none;" id="worktoast">
+	<div class="popDiv wid440 Marking" style="top: 30%;">
+		<div class="popHead">
+			<a href="javascript:;" class="popClose fr" onclick="toastClickFunc()"><img src="./popClose.png"></a>
+			<p class="fl fs18 colorDeep">提示</p>
+		</div>
+		<div class="het62"></div>
+		<p class="popWord fs16 colorIn" id="toastcontent"></p>
+
+		<div class="popBottom">
+			<a href="javascript:;" id="toastok" class="jb_btn jb_btn_92 fr fs14"></a>
+			<a href="javascript:;" id="toastno" class="btnBlue btn_92_cancel fr fs14"></a>
+		</div>
+		<div class="het72"></div>
+	</div>
+</div>
+
+<div class="maskDiv" style="display:none;" id="hintPop">
+	<div class="popDiv wid440 Marking">
+		<div class="popHead">
+			<p class="fl fs18 colorDeep">提示</p>
+		</div>
+		<div class="het62"></div>
+		<p class="popWord fs16 colorIn" id="hintCon"></p>
+		<div class="popBottom">
+			<a href="javascript:;" id="hintOk" class="jb_btn jb_btn_92 fr fs14"></a>
+		</div>
+		<div class="het72"></div>
+	</div>
+</div>
+<script>
+function popClickFunc() {
+	$('#workpop').hide();
+	if($('.popSetupShowHide').length > 0){
+		$('.popSetupShowHide').fullFadeOut();
+	}
+}
+
+function toastClickFunc() {
+	$('#worktoast').hide();
+	if($('.popSetupShowHide').length > 0){
+		$('.popSetupShowHide').fullFadeOut();
+	}
+}
+
+
+function workPop(content, okTent, cancelTent, okcallback, cancelCallback) {
+	var ta = $("#workpop");
+
+	if($('.popSetupShowHide').length > 0){
+		$(".popSetupShowHide").fullFadeIn();
+	}
+
+	ta.show();
+	
+	$("#popcontent").html(content);
+	var popokHiddenRead = $("#popokHiddenRead");
+
+	var ok = $("#popok");
+	ok.html(okTent);
+	ok.unbind();
+	ok.on("click", function() {
+		// 无障碍单位走定制,延迟语音读取处理
+		if("0" == "1") {
+			popokHiddenRead.attr("tabindex","0");
+			if (content && content != '很遗憾，未达到及格线，请重做') {
+				popokHiddenRead.focus();
+			}
+			setTimeout(function() {
+				okcallback && okcallback(ta);
+				popokHiddenRead.attr("tabindex","-1")
+				ta.hide();
+				if($('.popSetupShowHide').length > 0) {
+					$(".popSetupShowHide").fullFadeOut();
+				}
+			}, 1000)
+		} else {
+			okcallback && okcallback(ta);
+			ta.hide();
+
+			if($('.popSetupShowHide').length > 0) {
+				$(".popSetupShowHide").fullFadeOut();
+			}
+		}
+	});
+
+	var cancel = $("#popno");
+	cancel.html(cancelTent);
+	cancel.unbind();
+	cancel.on("click", function() {
+		cancelCallback && cancelCallback(ta);
+		ta.hide();
+		if($('.popSetupShowHide').length > 0) {
+			$(".popSetupShowHide").fullFadeOut();
+		}
+	});
+	if("0" == "1") {
+		$("#workpopFocus").focus();
+	}
+}
+
+function workToast(content, okTent, cancelTent, okcallback, cancelCallback) {
+	var ta = $("#worktoast");
+
+	if($('.popSetupShowHide').length > 0) {
+		$(".popSetupShowHide").fullFadeIn();
+	}
+
+	ta.show();
+
+	$("#toastcontent").html(content);
+
+	var ok = $("#toastok");
+	ok.html(okTent);
+	ok.unbind();
+	ok.on("click", function() {
+		okcallback && okcallback(ta);
+		ta.hide();
+
+		if($('.popSetupShowHide').length > 0) {
+			$(".popSetupShowHide").fullFadeOut();
+		}
+	});
+
+	var cancel = $("#toastno");
+	cancel.html(cancelTent);
+	cancel.unbind();
+	cancel.on("click", function() {
+		cancelCallback && cancelCallback(ta);
+		ta.hide();
+		if($('.popSetupShowHide').length > 0) {
+			$(".popSetupShowHide").fullFadeOut();
+		}
+	});
+}
+
+function workHint(content, okTent, okcallback) {
+	var ta = $("#hintPop");
+
+	if($('.popSetupShowHide').length > 0) {
+		$(".popSetupShowHide").fullFadeIn();
+	}
+
+	ta.show();
+
+	$("#hintCon").html(content);
+
+	var ok = $("#hintOk");
+	ok.html(okTent);
+	ok.unbind();
+	ok.on("click", function() {
+		okcallback && okcallback(ta);
+		ta.hide();
+
+		if($('.popSetupShowHide').length > 0) {
+			$(".popSetupShowHide").fullFadeOut();
+		}
+	});
+}
+
+function popFocus() {
+	if("0" != "1") {
+		return;
+	}
+	$("#popCloseFocusImg").attr("tabindex","0");
+	$("#popCloseFocus").focus();
+}
+function popCloseFocus() {
+	if("0" != "1") {
+		return;
+	}
+	$('#workpop').hide();
+	if($('.popSetupShowHide').length > 0) {
+		$('.popSetupShowHide').fullFadeOut();
+	}
+	$("#popCloseFocusImg").attr("tabindex","-1");
+}
+function popnoFocus() {
+	if("0" != "1") {
+		return;
+	}
+	if(event.keyCode == 9){
+		popFocus();
+	}
+	if(event.keyCode == 13){
+		$("#popCloseFocusImg").attr("tabindex","-1");
+	}
+}
+
+</script>
+
+<div class="maskDiv preview-dialog code-preview-div" style="display: none;z-index: 1001">
+    <div class="popDiv wid840 Marking" style="left: 30%;top: 20%">
+        <div class="popHead">
+            <a href="javascript:void(0)" onclick="closeHtmlPage()" class="popClose fr" style="display: inline-block;width: 18px;height: 18px;margin-top: 19px;"><img src="./popClose(1).png"></a>
+            <p class="fl fs18 colorDeep">预览网页</p>
+        </div>
+        <div class="het62"></div>
+        <div class="previewHtml  preview-render-div" style="height:470px; overflow: auto;"></div>
+        <div class="het72"></div>
+    </div>
+</div>
+
+<script>
+
+    function proceduralCodePreview(questionId) {
+        var editor = codeEditors[questionId];
+        var pureTxt = editor.getValue();
+        var code = pureTxt;
+        code = UE.utils.html(code);
+        if(top && top.previewHtmlPage){
+            top.previewHtmlPage(code);
+        }else if(parent && parent.parent && parent.parent.parent && parent.parent.parent.previewHtmlPage){
+            parent.parent.parent.previewHtmlPage(code);
+        }else {
+            previewHtmlPage(code);
+        }
+    }
+
+    function previewHtmlPage(code) {
+        var renderTarget = document.querySelector('.preview-render-div');
+        if (!renderTarget) {
+            return;
+        }
+        renderTarget.innerHTML = '';
+
+        var iframe = document.createElement('iframe');
+        iframe.setAttribute('sandbox', 'allow-scripts');
+        iframe.style.width = '100%';
+        iframe.style.height = '600px';
+        iframe.style.border = 'none';
+        iframe.style.borderRadius = '8px';
+        iframe.style.background = 'white';
+        iframe.style.display = 'block';
+
+        iframe.srcdoc =
+                '<meta ' +
+                'http-equiv="Content-Security-Policy" ' +
+                'content="' +
+                'default-src \'none\'; ' +
+                'script-src \'unsafe-inline\'; ' +
+                'style-src \'unsafe-inline\'; ' +
+                'img-src data:; ' +
+                'connect-src \'none\'; ' +
+                'frame-src \'none\'; ' +
+                'object-src \'none\'; ' +
+                'form-action \'none\';' +
+                '"/>' +
+                '<script>' +
+                'window.alert=function(){};' +
+                'window.confirm=function(){return false;};' +
+                'window.prompt=function(){return null;};' +
+                'window.open=function(){return null;};' +
+                '</scr' + 'ipt>' +
+                code;
+        renderTarget.appendChild(iframe);
+        var previewDialog = renderTarget.closest('.preview-dialog');
+        if (previewDialog) {
+            previewDialog.style.display = 'block';
+        }
+    }
+
+    function closeHtmlPage() {
+        $('.preview-dialog').hide();
+    }
+</script><input type="hidden" id="courseId" value="218936318">
+<input type="hidden" id="classId" value="140434938">
+<input type="hidden" id="cpi" value="410093475">
+<input type="hidden" id="workId" value="50044193">
+<input type="hidden" id="workAnswerId" value="56795576">
+<input type="hidden" id="answerId" value="56795576">
+<input type="hidden" id="api" value="1">
+<input type="hidden" id="mooc" value="0">
+<input type="hidden" id="knowledgeid" value="447212179">
+<input type="hidden" id="jobid" value="work-b3705a270fda4c18a1d567104d6ee006">
+<input type="hidden" id="originJobId" value="work-b3705a270fda4c18a1d567104d6ee006">
+<input type="hidden" id="enc" value="d25ac3635f49a05f424c904f250a9413">
+<input type="hidden" id="creatorId" value="410093475">
+	<div class="clearfix ">
+<div>
+    <div class="RightCon newTestCon" id="RightCon" style="width:auto;padding:0 10px 30px;min-height:0px;">
+		<div class="newTestTitle">
+			<div class="fl TestTitle_name">章节测验</div>
+						<div class="fr testTit_status testTit_status_complete"><i></i>已完成</div>
+					</div>
+		<div class="radiusBG">
+        <div class="CeYan">
+			<div class="ceyan_name">
+				<h3>你对课程的了解</h3>
+				<p>
+					<span>题量: 4</span>
+					<span>满分: 100.0</span>
+														</p>
+				
+			</div>
+			<div class="ansbtnBox">
+									<a href="https://mooc1.chaoxing.com/mooc-ans/work/selectWorkQuestionYiPiYue?courseId=218936318&amp;workId=50044193&amp;workAnswerId=56795576&amp;api=1&amp;knowledgeid=447212179&amp;classId=140434938&amp;oldWorkId=b3705a270fda4c18a1d567104d6ee006&amp;jobid=work-b3705a270fda4c18a1d567104d6ee006&amp;type=&amp;isphone=false&amp;submit=false&amp;enc=d25ac3635f49a05f424c904f250a9413&amp;cpi=410093475&amp;mooc2=1&amp;skipHeader=true&amp;originJobId=work-b3705a270fda4c18a1d567104d6ee006&amp;fromType=&amp;wMicroNodeId=0#" onclick="redoTest()" class="jb_btn_bg">重做 <i>(剩余 1 次)</i></a>
+								
+			</div>
+			<div class="DividerBox">
+				<div class="dividerCon">
+										<span class="ans_number">第1次作答<i></i></span>
+											<span class="achievement">本次成绩<i>100</i>分</span>
+					
+				</div>
+			</div>
+      		<div class="ZyBottom" id="ZyBottom">
+								
+												
+				
+				
+											<h3 class="newTestType">一. 单选题（共4题）</h3>
+					
+					
+					
+						
+												
+						
+						<div>
+						<div>
+						<div class="TiMu newTiMu ans-cc singleQuesId" data="210694178" id="question210694178">
+							<div class="Zy_TItle clearfix">
+								<i class="fl" tabindex="0" role="option">1</i>
+								<div class="clearfix font-cxsecret fontLabel qtContent" style="line-height: 1.5; font-size: 14px;padding-right:15px;" tabindex="0" role="option"><span class="newZy_TItle">【单选题】</span><p>《马克思主义基本原理概论》课程的性质为</p></div>
+							</div>
+															<form action="http://fanyapbl.fy.chaoxing.com/questionError/addQuestion" method="post" id="questionErrorForm1" target="_blank">
+    <ul class="Zy_ulTop qtDetail" tabindex="-1" aria-hidden="true">
+                                            <li class="clearfix" tabindex="0" role="option"><i class="fl">A、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>公共选修课<br></p></a></li>
+                                                                                                            <li class="clearfix" tabindex="0" role="option"><i class="fl">B、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>公共必修课<br></p></a></li>
+                                                                                                    <li class="clearfix" tabindex="0" role="option"><i class="fl">C、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>专业课<br></p></a></li>
+                                                </ul>
+</form>
+<!--新的答案开始-->
+<div class="newAnswerBx">
+    <div class="myAnswerBx marBot16">
+        <div class="myAnswer">
+            <span class="answerFont fl">我的答案：</span>
+            <div class="fl answerCon">
+                B
+            </div>
+            <p class="clear"></p>
+        </div>
+                    <div class="answerScore">
+                <div class="CorrectOrNot fl">
+                                            <span class="marking_dui"></span>
+                                    </div>
+                <div class="fr newAnswerScore"><span class="scoreNum">25.0</span>分</div>
+            </div>
+            </div>
+            <div class="correctAnswerBx marBot16">
+            <div class="correctAnswer">
+                <span class="answerFont fl">正确答案：</span>
+                <div class="fl answerCon">
+                    B
+                </div>
+                <p class="clear"></p>
+            </div>
+        </div>
+        <!--显示答案解析-->
+            <div class="knowledgePointBx colorGray">
+        <span class="answerFont fl" style="line-height: 30px;">知识点：</span>
+        <div class="fl answerCon">
+            <ul class="knowledgeList">
+                                    <li title="随堂测验">
+                        <a target="_blank" href="https://mooc2-ans.chaoxing.com/mooc2-ans/mycourse/stu?courseid=218936318&amp;clazzid=140434938&amp;cpi=410093475&amp;microTopicId=79525654&amp;&amp;enc=1588f9b4372be03ae44721d5af92f332&amp;t=1782368208858">随堂测验</a>
+                    </li>
+                            </ul>
+        </div>
+        <p class="clear"></p>
+    </div>
+    <!--显示答案解析--></div>
+<!--新的答案结束-->														</div>
+							</div>
+													</div>
+						<!--单选题结束-->
+											
+						
+												
+						
+						<div>
+						<div>
+						<div class="TiMu newTiMu ans-cc singleQuesId" data="210694177" id="question210694177">
+							<div class="Zy_TItle clearfix">
+								<i class="fl" tabindex="0" role="option">2</i>
+								<div class="clearfix font-cxsecret fontLabel qtContent" style="line-height: 1.5; font-size: 14px;padding-right:15px;" tabindex="0" role="option"><span class="newZy_TItle">【单选题】</span><p>《马克思主义基本原理》课程的实践学时为</p></div>
+							</div>
+															<form action="http://fanyapbl.fy.chaoxing.com/questionError/addQuestion" method="post" id="questionErrorForm2" target="_blank">
+    <ul class="Zy_ulTop qtDetail" tabindex="-1" aria-hidden="true">
+                                                                                <li class="clearfix" tabindex="0" role="option"><i class="fl">A、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>8<br></p></a></li>
+                                                                                                    <li class="clearfix" tabindex="0" role="option"><i class="fl">B、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>10<br></p></a></li>
+                                                                        <li class="clearfix" tabindex="0" role="option"><i class="fl">C、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>18<br></p></a></li>
+                                                                        <li class="clearfix" tabindex="0" role="option"><i class="fl">D、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>40<br></p></a></li>
+                                                </ul>
+</form>
+<!--新的答案开始-->
+<div class="newAnswerBx">
+    <div class="myAnswerBx marBot16">
+        <div class="myAnswer">
+            <span class="answerFont fl">我的答案：</span>
+            <div class="fl answerCon">
+                A
+            </div>
+            <p class="clear"></p>
+        </div>
+                    <div class="answerScore">
+                <div class="CorrectOrNot fl">
+                                            <span class="marking_dui"></span>
+                                    </div>
+                <div class="fr newAnswerScore"><span class="scoreNum">25.0</span>分</div>
+            </div>
+            </div>
+            <div class="correctAnswerBx marBot16">
+            <div class="correctAnswer">
+                <span class="answerFont fl">正确答案：</span>
+                <div class="fl answerCon">
+                    A
+                </div>
+                <p class="clear"></p>
+            </div>
+        </div>
+        <!--显示答案解析-->
+            <div class="knowledgePointBx colorGray">
+        <span class="answerFont fl" style="line-height: 30px;">知识点：</span>
+        <div class="fl answerCon">
+            <ul class="knowledgeList">
+                                    <li title="随堂测验">
+                        <a target="_blank" href="https://mooc2-ans.chaoxing.com/mooc2-ans/mycourse/stu?courseid=218936318&amp;clazzid=140434938&amp;cpi=410093475&amp;microTopicId=79525654&amp;&amp;enc=1588f9b4372be03ae44721d5af92f332&amp;t=1782368208858">随堂测验</a>
+                    </li>
+                            </ul>
+        </div>
+        <p class="clear"></p>
+    </div>
+    <!--显示答案解析--></div>
+<!--新的答案结束-->														</div>
+							</div>
+													</div>
+						<!--单选题结束-->
+											
+						
+												
+						
+						<div>
+						<div>
+						<div class="TiMu newTiMu ans-cc singleQuesId" data="210694176" id="question210694176">
+							<div class="Zy_TItle clearfix">
+								<i class="fl" tabindex="0" role="option">3</i>
+								<div class="clearfix font-cxsecret fontLabel qtContent" style="line-height: 1.5; font-size: 14px;padding-right:15px;" tabindex="0" role="option"><span class="newZy_TItle">【单选题】</span><p>《马克思主义基本原理》课程的理论学时为<br></p></div>
+							</div>
+															<form action="http://fanyapbl.fy.chaoxing.com/questionError/addQuestion" method="post" id="questionErrorForm3" target="_blank">
+    <ul class="Zy_ulTop qtDetail" tabindex="-1" aria-hidden="true">
+                                            <li class="clearfix" tabindex="0" role="option"><i class="fl">A、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>8<br></p></a></li>
+                                                                        <li class="clearfix" tabindex="0" role="option"><i class="fl">B、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>38<br></p></a></li>
+                                                                                                            <li class="clearfix" tabindex="0" role="option"><i class="fl">C、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>40<br></p></a></li>
+                                                                                                    <li class="clearfix" tabindex="0" role="option"><i class="fl">D、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>48<br></p></a></li>
+                                                </ul>
+</form>
+<!--新的答案开始-->
+<div class="newAnswerBx">
+    <div class="myAnswerBx marBot16">
+        <div class="myAnswer">
+            <span class="answerFont fl">我的答案：</span>
+            <div class="fl answerCon">
+                C
+            </div>
+            <p class="clear"></p>
+        </div>
+                    <div class="answerScore">
+                <div class="CorrectOrNot fl">
+                                            <span class="marking_dui"></span>
+                                    </div>
+                <div class="fr newAnswerScore"><span class="scoreNum">25.0</span>分</div>
+            </div>
+            </div>
+            <div class="correctAnswerBx marBot16">
+            <div class="correctAnswer">
+                <span class="answerFont fl">正确答案：</span>
+                <div class="fl answerCon">
+                    C
+                </div>
+                <p class="clear"></p>
+            </div>
+        </div>
+        <!--显示答案解析-->
+            <div class="knowledgePointBx colorGray">
+        <span class="answerFont fl" style="line-height: 30px;">知识点：</span>
+        <div class="fl answerCon">
+            <ul class="knowledgeList">
+                                    <li title="随堂测验">
+                        <a target="_blank" href="https://mooc2-ans.chaoxing.com/mooc2-ans/mycourse/stu?courseid=218936318&amp;clazzid=140434938&amp;cpi=410093475&amp;microTopicId=79525654&amp;&amp;enc=1588f9b4372be03ae44721d5af92f332&amp;t=1782368208858">随堂测验</a>
+                    </li>
+                            </ul>
+        </div>
+        <p class="clear"></p>
+    </div>
+    <!--显示答案解析--></div>
+<!--新的答案结束-->														</div>
+							</div>
+													</div>
+						<!--单选题结束-->
+											
+						
+												
+						
+						<div>
+						<div>
+						<div class="TiMu newTiMu ans-cc singleQuesId" data="210694175" id="question210694175">
+							<div class="Zy_TItle clearfix">
+								<i class="fl" tabindex="0" role="option">4</i>
+								<div class="clearfix font-cxsecret fontLabel qtContent" style="line-height: 1.5; font-size: 14px;padding-right:15px;" tabindex="0" role="option"><span class="newZy_TItle">【单选题】</span><p>《马克思主义基本原理》课程学时为<br></p></div>
+							</div>
+															<form action="http://fanyapbl.fy.chaoxing.com/questionError/addQuestion" method="post" id="questionErrorForm4" target="_blank">
+    <ul class="Zy_ulTop qtDetail" tabindex="-1" aria-hidden="true">
+                                            <li class="clearfix" tabindex="0" role="option"><i class="fl">A、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>40<br></p></a></li>
+                                                                                                            <li class="clearfix" tabindex="0" role="option"><i class="fl">B、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>48<br></p></a></li>
+                                                                                                    <li class="clearfix" tabindex="0" role="option"><i class="fl">C、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>38<br></p></a></li>
+                                                                        <li class="clearfix" tabindex="0" role="option"><i class="fl">D、</i><a href="javascript:void(0)" class="fl" style="word-break: break-all;text-decoration: none;" tabindex="-1" aria-hidden="true"><p>80<br></p></a></li>
+                                                </ul>
+</form>
+<!--新的答案开始-->
+<div class="newAnswerBx">
+    <div class="myAnswerBx marBot16">
+        <div class="myAnswer">
+            <span class="answerFont fl">我的答案：</span>
+            <div class="fl answerCon">
+                B
+            </div>
+            <p class="clear"></p>
+        </div>
+                    <div class="answerScore">
+                <div class="CorrectOrNot fl">
+                                            <span class="marking_dui"></span>
+                                    </div>
+                <div class="fr newAnswerScore"><span class="scoreNum">25.0</span>分</div>
+            </div>
+            </div>
+            <div class="correctAnswerBx marBot16">
+            <div class="correctAnswer">
+                <span class="answerFont fl">正确答案：</span>
+                <div class="fl answerCon">
+                    B
+                </div>
+                <p class="clear"></p>
+            </div>
+        </div>
+        <!--显示答案解析-->
+            <div class="knowledgePointBx colorGray">
+        <span class="answerFont fl" style="line-height: 30px;">知识点：</span>
+        <div class="fl answerCon">
+            <ul class="knowledgeList">
+                                    <li title="随堂测验">
+                        <a target="_blank" href="https://mooc2-ans.chaoxing.com/mooc2-ans/mycourse/stu?courseid=218936318&amp;clazzid=140434938&amp;cpi=410093475&amp;microTopicId=79525654&amp;&amp;enc=1588f9b4372be03ae44721d5af92f332&amp;t=1782368208858">随堂测验</a>
+                    </li>
+                            </ul>
+        </div>
+        <p class="clear"></p>
+    </div>
+    <!--显示答案解析--></div>
+<!--新的答案结束-->														</div>
+							</div>
+													</div>
+						<!--单选题结束-->
+															            </div>
+            <!--做作业结束-->
+			        </div>
+    </div>
+		</div>
+
+</div>
+</div>
+	<!-- 代码高亮开始 start -->
+<link type="text/css" href="./default(1).min.css" rel="stylesheet">
+<script type="text/javascript" src="./highlight.min.js.下载" charset="utf-8"></script>
+<script type="text/javascript" src="./highlightjs-line-numbers.js.下载" charset="utf-8"></script>
+<style>
+    pre,code {display: block;background: #F7F8FA;border: 1px solid #E1E3E5; font-size: 14px; border-radius: 4px; padding: 30px 20px; margin: 20px 0; font-family: CXHackSafariFont,CXEmojiFont,CXChineseQuote,-apple-system,BlinkMacSystemFont,Helvetica Neue,Helvetica,Tahoma, Arial,Segoe UI,PingFang SC, Hiragino Sans GB,Microsoft YaHei,sans-serif,Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,Noto Color Emoji; }
+    pre{overflow-x: auto;margin:.5em 0;padding:.4em .6em;border-radius:8px;background:#f8f8f8;}
+    pre.autolinebreak{white-space: normal; }
+    code.hljs{background: #F7F8FA;}
+    pre code,pre pre{ margin: 0; background: none;border: none;}/*padding: 0;*/
+    .code-tool-wrap{padding-bottom: 1em;left: 20px; top: 2px; width: calc(100% - 40px); height: 24px; font-size: 14px; user-select: none;}
+    .code-lang{ display:inline-block; color: #ACB4BF; }
+    .ans-cc .ans-noborder th,.ans-cc .ans-noborder td{border-color:transparent;}
+    .ans-cc pre,.ans-cc code{ position: relative; padding: 0px 20px 30px; margin: 20px 0;border: 1px solid #E1E3E5; border-radius: 4px; color: #474C59; background: #F7F8FA; font-size:14px; font-family: CXHackSafariFont,CXEmojiFont,CXChineseQuote,-apple-system,BlinkMacSystemFont,Helvetica Neue,Helvetica,Tahoma, Arial,Segoe UI,PingFang SC, Hiragino Sans GB,Microsoft YaHei,sans-serif,Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,Noto Color Emoji;  }
+    .ans-cc pre{overflow: auto}
+    .ans-cc pre code,.ans-cc pre pre{ padding: 0; border:none; margin: 0; background: none;border-radius: 0;}
+    .ans-cc pre.autolinebreak{white-space: pre-wrap;word-wrap: break-word;}
+    .hljs-ln-numbers {text-align: center;color: #ccc;border-right: 1px solid #CCC;vertical-align: top;padding-right: 5px !important;}
+    .hljs-ln-code {padding-left: 5px !important;}
+    /* 全局去掉表格样式 */
+    .ans-cc pre code table tr td {border: solid 0px #cfd4dc;text-align: left}
+    /* 作业表格适配，考试表格适配 */
+    .ans-cc pre table{table-layout: unset;}
+    .ans-cc pre code table{table-layout: unset;}
+    /* pre 标签未换行 */
+    .ans-cc pre.line-numbers{clear:both}
+    .ans-cc pre{clear:both}
+
+    /* app作业库 考试库 查看样式 */
+
+    .hljs-link, .hljs-operator, .hljs-regexp, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-symbol, .hljs-template-variable, .hljs-variable {
+        color: #ab5656 !important;
+    }
+    .hljs-deletion, .hljs-number, .hljs-quote, .hljs-selector-class, .hljs-selector-id, .hljs-string, .hljs-template-tag, .hljs-type {
+        color: #800 !important;
+    }
+    /* 章节作业 */
+    .hljs-ln span{margin-right:0}
+
+    /* 学习通颜色覆盖 */
+    .hljs-type{color:#800 !important;}
+    .hljs-section,.hljs-title{color:#800 !important;font-weight:700}
+    /* 背景颜色 */
+    .ans-cc pre code td{background-color: unset;}
+</style>
+<link type="text/css" href="./newEditor.css" rel="stylesheet">
+<script>
+    /**
+     * 保证最后加载
+     */
+    $(function () {
+        var pre = $(".ans-cc").find('pre')
+        if(pre){
+            pre.each(function () {
+                // debugger
+                var me = this;
+                if ($(me).hasClass('CodeMirror-line')) { //代码编辑器
+                    return;
+                }
+                var lang = me.firstChild && me.firstChild.lang;
+                if (typeof (lang) == 'undefined' || lang == null || lang == "" ) {
+                    lang = me.firstChild && me.firstChild.className;
+                    if (typeof (lang) != 'undefined' && lang != null && lang != "" ) {
+                        var split = lang.split("-");
+                        lang = split[1];
+                        if (lang == 'plain') {
+                            lang = 'Plain Text';
+                        }
+                    } else {
+                        lang = 'Plain Text';
+                    }
+                }
+                me.innerHTML = '<div class="code-tool-wrap clearfix"><div class="code-lang fl">' + lang
+                        + '</div><div class="copy1 fr"><i></i><span></span></div></div>' + me.innerHTML;
+                me.innerHTML = me.innerHTML.replace(/<br\s*\/?>/g, "\n");
+            })
+        }
+
+        try {
+            hljs.initHighlightingOnLoad();
+            hljs.initLineNumbersOnLoad({ singleLine:true });
+        } catch (e) {
+
+        }
+    })
+</script>
+<!-- 代码高亮结束 end -->	
+<script>
+	var courseId = $("#courseId").val();
+	var classId = $("#classId").val();
+	var cpi = $("#cpi").val();
+	var workId = $("#workId").val();
+	var workAnswerId = $("#workAnswerId").val();
+	var knowledgeid = $("#knowledgeid").val();
+	var jobid = $("#jobid").val();
+	var originJobId = $("#originJobId").val();
+	var enc = $("#enc").val();
+
+	function redoTest() {
+		var msg ="";
+					msg = "之前答题内容会保留，确认重做？"
+				workPop(msg, "确定", "取消", function() {
+			retest();
+		});
+	}
+	function recordList() {
+		var url = _HOST_CP2_ + "/work/record-list?courseId=" + courseId + "&classId=" + classId + "&workId=" + workId + "&workAnswerId=" + workAnswerId
+			+ "&cpi=" + cpi + "&api=1&mooc2=1&ut=s";
+		window.open(url, '_blank').location;
+	}
+
+	var lock = 0;
+	function retest() {
+		if (lock == 1) {
+			return false;
+		}
+		lock = 1;
+		
+		$.ajax({
+			type : "get",
+			url : _HOST_CP2_ + "/work/retest",
+			dataType : "json",
+			data : {
+				"courseId" : courseId,
+				"classId" : classId,
+				"workId" : workId,
+				"workAnswerId" : workAnswerId,
+				"knowledgeid" : knowledgeid,
+				"jobid" : jobid,
+				"originJobId" : originJobId,
+				"enc" : enc,
+				"cpi" : cpi,
+				"mooc2" : 1,
+				"wMicroNodeId": "0"
+			},
+			success : function(data) {
+				if (data.status) {
+					location.href = data.url;
+				} else {
+					$.toast({
+						type : 'failure',
+						content : data.msg
+					});
+					lock = 0;
+				}
+				// $('#redoWin').hide();
+				// $('.mask').css('display', 'none');
+			}
+		});
+	}
+
+	function showCon(obj) {
+		var comment = $(obj).parent().next()
+		if (comment.css("display") == "none") {
+			comment.slideDown();
+		} else {
+			comment.slideUp();
+		}
+	}
+
+	var passingStandard = "60";
+	var stuScore = "100.0";
+	
+	if(passingStandard=='null' || passingStandard==''){
+	    passingStandard = '0';
+	}
+	
+    if(parseInt(passingStandard) == 0 || parseInt(stuScore) >= parseInt(passingStandard)) {
+        parent.ed_complete();			
+    }
+</script>
+
+<script type="text/javascript">
+
+ function add (num){
+	var courseId=$("#courseId").val();  // 课程id
+	var type=$("#type").val();   // 试题类型
+	var easy=$("#easy").val();   // 试题难易度，如果大于3或者小于0  就会默认为2
+	var content=$("#content").val();
+	var answer=$("#answer").val();
+	var score=$("#score").val();  // 试题分数
+	var chapterId=$("#chapterId").val(); //  章节id，如果小于0  设为默认值0 
+	var myanswer=$("#myanswer").val(); //学生答案
+	var qid=$("#qid").val();  // 试题在a系统的id
+
+	
+	$("#questionErrorForm"+num).submit();
+	 
+ }
+ 
+$(function(){
+	$(".viewAttach").find("span:first").each(function(){
+		$(this).attr("onclick", "viewMark(this);");
+	});
+	 var isAccessibleCustomFid = "0";
+	 if(isAccessibleCustomFid == "1"){
+	 	$("#tabZyTop").focus();
+	 }
+});
+</script>
+<script src="./resizeWorkWindow.js.下载"></script>
+</body></html>

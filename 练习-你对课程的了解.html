@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>练习：你对课程的了解</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #f0f2f5;
+            color: #333;
+            padding: 30px 16px;
+        }
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 6px;
+            color: #1a1a2e;
+        }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .score-bar {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .score-bar .label {
+            font-size: 15px;
+            color: #666;
+        }
+        .score-bar .score {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a73e8;
+        }
+        .score-bar .score.pass { color: #34a853; }
+        .score-bar .score.fail { color: #ea4335; }
+
+        .question-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: box-shadow 0.2s;
+        }
+        .question-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+        .q-header {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .q-num {
+            background: #1a73e8;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .q-type {
+            font-size: 13px;
+            color: #1a73e8;
+            background: #e8f0fe;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .q-text {
+            font-size: 16px;
+            line-height: 1.6;
+            font-weight: 500;
+            flex: 1;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        .option:hover { border-color: #1a73e8; background: #f6f9ff; }
+        .option .label {
+            font-weight: 600;
+            color: #555;
+            margin-right: 8px;
+            min-width: 22px;
+        }
+        .option.selected {
+            border-color: #1a73e8;
+            background: #e8f0fe;
+        }
+        .option.selected .label { color: #1a73e8; }
+        .option.correct {
+            border-color: #34a853;
+            background: #e6f4ea;
+        }
+        .option.correct .label { color: #34a853; }
+        .option.wrong {
+            border-color: #ea4335;
+            background: #fce8e6;
+        }
+        .option.wrong .label { color: #ea4335; }
+        .option.disabled { cursor: default; opacity: 0.85; }
+        .option.disabled:hover { border-color: #e0e0e0; background: transparent; }
+        .option.disabled.selected:hover { border-color: #1a73e8; background: #e8f0fe; }
+        .option.disabled.correct:hover { border-color: #34a853; background: #e6f4ea; }
+        .option.disabled.wrong:hover { border-color: #ea4335; background: #fce8e6; }
+
+        .result-badge {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        .result-badge.show { display: block; }
+        .result-badge.correct {
+            background: #e6f4ea;
+            color: #1e7e34;
+            border: 1px solid #b7e1cd;
+        }
+        .result-badge.wrong {
+            background: #fce8e6;
+            color: #c5221f;
+            border: 1px solid #f5c6cb;
+        }
+        .result-badge .answer-hint { margin-top: 4px; color: #555; }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary {
+            background: #1a73e8;
+            color: #fff;
+        }
+        .btn-primary:hover { background: #1557b0; }
+        .btn-primary:disabled {
+            background: #a0c4ff;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: #fff;
+            color: #1a73e8;
+            border: 2px solid #1a73e8;
+        }
+        .btn-secondary:hover { background: #e8f0fe; }
+        .btn-outline {
+            background: transparent;
+            color: #666;
+            border: 2px solid #ddd;
+        }
+        .btn-outline:hover { border-color: #999; color: #333; }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        @media (max-width: 500px) {
+            body { padding: 16px 10px; }
+            .question-card { padding: 16px; }
+            .q-text { font-size: 15px; }
+            .option { padding: 8px 12px; font-size: 14px; }
+            .btn { padding: 10px 20px; font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📝 你对课程的了解</h1>
+    <p class="subtitle">《马克思主义基本原理》· 随堂测验</p>
+
+    <div class="score-bar" id="scoreBar">
+        <span class="label">得分</span>
+        <span class="score" id="scoreDisplay">— / 100</span>
+    </div>
+
+    <div id="questionsContainer"></div>
+
+    <div class="actions">
+        <button class="btn btn-primary" id="submitBtn">提交答案</button>
+        <button class="btn btn-secondary" id="retryBtn" style="display:none">重新作答</button>
+        <button class="btn btn-outline" id="resetBtn">重置</button>
+    </div>
+
+    <div class="footer">点击选项选择答案，提交后查看结果</div>
+</div>
+
+<script>
+// ========== 题库数据 ==========
+const questions = [
+    {
+        id: 1,
+        type: '单选题',
+        text: '《马克思主义基本原理概论》课程的性质为',
+        options: ['公共选修课', '公共必修课', '专业课'],
+        answer: 1,  // index
+        explanation: '《马克思主义基本原理概论》是高校思想政治理论课的核心课程，属于公共必修课。'
+    },
+    {
+        id: 2,
+        type: '单选题',
+        text: '《马克思主义基本原理》课程的实践学时为',
+        options: ['8', '10', '18', '40'],
+        answer: 0,
+        explanation: '该课程的实践学时为8学时。'
+    },
+    {
+        id: 3,
+        type: '单选题',
+        text: '《马克思主义基本原理》课程的理论学时为',
+        options: ['8', '38', '40', '48'],
+        answer: 2,
+        explanation: '该课程的理论学时为40学时。'
+    },
+    {
+        id: 4,
+        type: '单选题',
+        text: '《马克思主义基本原理》课程学时为',
+        options: ['40', '48', '38', '80'],
+        answer: 1,
+        explanation: '该课程总学时为48学时（理论40 + 实践8）。'
+    }
+];
+
+const LABELS = ['A', 'B', 'C', 'D'];
+
+// ========== 状态 ==========
+let userAnswers = new Array(questions.length).fill(null);
+let submitted = false;
+
+// ========== DOM 引用 ==========
+const container = document.getElementById('questionsContainer');
+const scoreDisplay = document.getElementById('scoreDisplay');
+const submitBtn = document.getElementById('submitBtn');
+const retryBtn = document.getElementById('retryBtn');
+const resetBtn = document.getElementById('resetBtn');
+
+// ========== 渲染 ==========
+function render() {
+    container.innerHTML = questions.map((q, qi) => {
+        const selected = userAnswers[qi];
+        const hasResult = submitted && selected !== null;
+
+        const optionsHtml = q.options.map((opt, oi) => {
+            let cls = 'option';
+            if (selected === oi) cls += ' selected';
+            if (hasResult) {
+                cls += ' disabled';
+                if (oi === q.answer) cls += ' correct';
+                if (selected === oi && oi !== q.answer) cls += ' wrong';
+            }
+            return `<div class="${cls}" data-qi="${qi}" data-oi="${oi}">
+                <span class="label">${LABELS[oi]}、</span>
+                <span>${opt}</span>
+            </div>`;
+        }).join('');
+
+        let resultHtml = '';
+        if (hasResult) {
+            const isCorrect = selected === q.answer;
+            resultHtml = `<div class="result-badge show ${isCorrect ? 'correct' : 'wrong'}">
+                <strong>${isCorrect ? '✅ 回答正确' : '❌ 回答错误'}</strong>
+                <div class="answer-hint">正确答案：${LABELS[q.answer]}、${q.options[q.answer]}
+                ${!isCorrect ? `<br>你的答案：${LABELS[selected]}、${q.options[selected]}` : ''}
+                </div>
+                ${q.explanation ? `<div class="answer-hint">💡 ${q.explanation}</div>` : ''}
+            </div>`;
+        }
+
+        return `<div class="question-card">
+            <div class="q-header">
+                <span class="q-num">${qi + 1}</span>
+                <span class="q-type">${q.type}</span>
+                <span class="q-text">${q.text}</span>
+            </div>
+            <div class="options">${optionsHtml}</div>
+            ${resultHtml}
+        </div>`;
+    }).join('');
+
+    // 绑定选项点击
+    if (!submitted) {
+        document.querySelectorAll('.option:not(.disabled)').forEach(el => {
+            el.addEventListener('click', () => {
+                const qi = parseInt(el.dataset.qi);
+                const oi = parseInt(el.dataset.oi);
+                userAnswers[qi] = oi;
+                render();
+            });
+        });
+    }
+
+    updateScoreBar();
+    updateButtons();
+}
+
+function updateScoreBar() {
+    if (!submitted) {
+        scoreDisplay.textContent = '— / 100';
+        scoreDisplay.className = 'score';
+        return;
+    }
+    const correct = questions.reduce((sum, q, i) => {
+        return sum + (userAnswers[i] === q.answer ? 1 : 0);
+    }, 0);
+    const total = questions.length;
+    const pct = Math.round((correct / total) * 100);
+    const allAnswered = userAnswers.every(a => a !== null);
+    const display = allAnswered ? `${pct}` : (correct * 25).toFixed(0);
+    const displayText = allAnswered ? `${display} / 100` : `${display} / 100`;
+    scoreDisplay.textContent = displayText;
+    if (allAnswered) {
+        scoreDisplay.className = 'score ' + (pct >= 60 ? 'pass' : 'fail');
+    } else {
+        scoreDisplay.className = 'score';
+    }
+}
+
+function updateButtons() {
+    const allAnswered = userAnswers.every(a => a !== null);
+    submitBtn.disabled = submitted || !allAnswered;
+    submitBtn.style.display = submitted ? 'none' : '';
+    retryBtn.style.display = submitted ? '' : 'none';
+}
+
+// ========== 提交 ==========
+function submitAnswers() {
+    if (submitted) return;
+    if (userAnswers.some(a => a === null)) return;
+    submitted = true;
+    render();
+}
+
+// ========== 重做/重置 ==========
+function retry() {
+    submitted = false;
+    render();
+}
+
+function resetAll() {
+    userAnswers = new Array(questions.length).fill(null);
+    submitted = false;
+    render();
+}
+
+// ========== 初始化 ==========
+submitBtn.addEventListener('click', submitAnswers);
+retryBtn.addEventListener('click', retry);
+resetBtn.addEventListener('click', resetAll);
+
+render();
+</script>
+</body>
+</html>
